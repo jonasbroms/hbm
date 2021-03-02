@@ -41,8 +41,6 @@ github.com/jinzhu/inflection v1.0.1-0.20210111022912-b5281034e75e h1:g/g1C8Pyhbi
 github.com/jinzhu/inflection v1.0.1-0.20210111022912-b5281034e75e/go.mod h1:lcrn0jrToZnZxiaoiYlmxfr1DnDQn86NkcbmyrP7m5w=
 github.com/jinzhu/now v1.0.1 h1:HjfetcXq097iXP0uoPCdnM4Efp5/9MsM0/M+XOTeR3M=
 github.com/jinzhu/now v1.0.1/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
-github.com/juli3nk/go-utils v0.0.0-20200424204150-48a3b889ed29 h1:qAaI5VyuZQ+OjagYTIuai/Rbkn8qElzKvKFOgSwg/uw=
-github.com/juli3nk/go-utils v0.0.0-20200424204150-48a3b889ed29/go.mod h1:B274D7iAr87jTS11XNlSPJGxp8Aj71KTRn+gG5pZjnk=
 github.com/juliengk/go-docker v0.0.0-20180321163138-f5cda316edb7 h1:Ar8RPJfZQ/ek71/Clxqi0jiACD0xagNB7vyUxdli8zw=
 github.com/juliengk/go-docker v0.0.0-20180321163138-f5cda316edb7/go.mod h1:4/1AGRSNCOSf7Xrm91WQNdpRjLzTo7h0Dang+WvuIwQ=
 github.com/juliengk/go-log v0.0.0-20171002012451-57b916563bbb h1:4ghOCHP1g4MjTunJ9/6XG/blvu58gfQ6NLb00A47mKA=
@@ -86,7 +84,6 @@ golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5h
 golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd h1:xhmwyvizuTgC2qz7ZlMluP20uW+C3Rm0FD/WLDX8884=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/airbrake/gobrake.v2 v2.0.9 h1:7z2uVWwn7oVeeugY1DtlPAy5H+KYgB1KeKTnqjNatLo=

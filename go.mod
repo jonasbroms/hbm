@@ -37,10 +37,10 @@ require (
 	gotest.tools v2.2.0+incompatible // indirect
 )
 
-replace github.com/juliengk/go-utils => github.com/juli3nk/go-utils v0.0.0-20200424204150-48a3b889ed29
+replace github.com/juliengk/go-utils => ./local/github.com/juliengk/go-utils/
 
-replace github.com/juliengk/go-utils/filedir => github.com/juli3nk/go-utils/filedir v0.0.0-20200424204150-48a3b889ed29
+replace github.com/juliengk/go-utils/filedir => ./local/github.com/juliengk/go-utils/filedir
 
-replace github.com/juliengk/go-utils/json => github.com/juli3nk/go-utils/json v0.0.0-20200424204150-48a3b889ed29
+replace github.com/juliengk/go-utils/json => ./local/github.com/juliengk/go-utils/json
 
-replace github.com/juliengk/go-utils/validation => ./vendor/github.com/juliengk/go-utils/validation
+replace github.com/juliengk/go-utils/validation => ./local/github.com/juliengk/go-utils/validation
