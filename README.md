@@ -1,8 +1,5 @@
 # HBM (Harbormaster)
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/kassisol/hbm)](https://goreportcard.com/report/github.com/kassisol/hbm)
-[![MicroBadger](https://images.microbadger.com/badges/version/kassisol/hbm:0.11.0.svg)](https://microbadger.com/images/kassisol/hbm:0.11.0 "Get your own version badge on microbadger.com")
-
 Harbormaster is a basic extendable Docker Engine [access authorization plugin](https://docs.docker.com/engine/extend/plugins_authorization/) that runs on directly on the host.
 
 By default, Harbormaster plugin prevents from executing commands with certain parameters.
@@ -10,20 +7,21 @@ By default, Harbormaster plugin prevents from executing commands with certain pa
  1. Docker commands
  2. Pull images
  3. Start containers with specific parameters
- * `--privileged`
- * `--ipc=host`
- * `--net=host`
- * `--pid=host`
- * `--userns=host`
- * `--uts=host`
- * any Linux capabilities with parameter `--cap-add=[]`
- * any devices added with parameter `--device=[]`
- * any dns servers added with parameter `--dns`
- * any ports added with parameter `--port`
- * any volumes mounted with parameter `-v`
- * any logging with parameters `--log-driver` and `--log-opt`
- * `--sysctl`
- * `--security-opt`
+
+* `--privileged`
+* `--ipc=host`
+* `--net=host`
+* `--pid=host`
+* `--userns=host`
+* `--uts=host`
+* any Linux capabilities with parameter `--cap-add=[]`
+* any devices added with parameter `--device=[]`
+* any dns servers added with parameter `--dns`
+* any ports added with parameter `--port`
+* any volumes mounted with parameter `-v`
+* any logging with parameters `--log-driver` and `--log-opt`
+* `--sysctl`
+* `--security-opt`
 
 ## Versions
 
@@ -31,18 +29,13 @@ Supported Docker versions with HBM.
 
 | HBM Version | Docker Version | Docker API |
 |-------------|----------------|------------|
-| 0.2.x       | 1.12.x         | 1.24       |
-| 0.3.x       | 17.05.x        | 1.29       |
-| 0.5.x       | 17.06.x        | 1.30       |
-| 0.5.x       | 17.09.x        | 1.32       |
-| >= 0.6.0    | >= 1.12.x      | >= 1.24    |
+| 0.19.x      | 27.x           | 1.47    |
 
-## Getting Started & Documentation
+## Open Source Licenses
 
-All documentation is available on the [Harbormaster website](http://harbormaster.io/docs/hbm/overview/).
+We depend on the many great open source licenses, listed below:
 
-## User Feedback
-
-### Issues
-
-If you have any problems with or questions about this application, please contact us through a [GitHub](https://github.com/kassisol/hbm/issues) issue.
+* [Docker types and client](github.com/moby/moby) by Docker. View [License](https://github.com/moby/moby/blob/master/LICENSE)
+* [Docker plugins helpers](github.com/docker/go-plugins-helpers) by Docker. View [License](https://github.com/docker/go-plugins-helpers/blob/master/LICENSE)
+* [Gorm](github.com/jinzhu/gorm) by Jinzhu. View [License](https://github.com/jinzhu/gorm/blob/master/License)
+* [Cobra](github.com/spf13/cobra) by Steve Francia. View [License](https://github.com/spf13/cobra/blob/master/LICENSE.txt)
