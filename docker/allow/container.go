@@ -104,17 +104,24 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 	}
 
 	if len(cc.HostConfig.PortBindings) > 0 {
-		for _, pbs := range cc.HostConfig.PortBindings {
+		for cp, pbs := range cc.HostConfig.PortBindings {
 			for _, pb := range pbs {
 				spb := GetPortBindingString(&pb)
 
-				if !p.Validate(config.Username, "port", spb, "") {
+				cps := cp.Port()
+				var fp string
+				if spb != "" {
+					fp = spb
+				} else {
+					fp = cps
+				}
+				if !p.Validate(config.Username, "port", fp, "") {
 					return &types.AllowResult{
 						Allow: false,
 						Msg: map[string]string{
-							"text":           fmt.Sprintf("Port %s is not allowed to be published", spb),
+							"text":           fmt.Sprintf("Port %s is not allowed to be published", fp),
 							"resource_type":  "port",
-							"resource_value": spb,
+							"resource_value": fp,
 						},
 					}
 				}
