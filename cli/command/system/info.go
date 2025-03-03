@@ -93,11 +93,11 @@ func runInfo(cmd *cobra.Command, args []string) {
 	fmt.Println("Server Version:", version.Version)
 	fmt.Println("Storage Driver: sqlite")
 	fmt.Println("Harbormaster Root Dir:", adf.AppPath)
-	fmt.Println("Docker AuthZ Plugin Enabled:", pluginEnabled())
+	fmt.Println("Docker1 AuthZ Plugin Enabled:", pluginEnabled())
 }
 
 func pluginEnabled() bool {
-	cli, err := client.NewEnvClient()
+	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return false
 	}
@@ -108,6 +108,7 @@ func pluginEnabled() bool {
 	}
 
 	for _, p := range info.Plugins.Authorization {
+
 		if p == "hbm" {
 			return true
 		}
