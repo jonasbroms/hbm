@@ -1,9 +1,9 @@
 FROM kassis/dev:go
 
 ########## Dapper Configuration #####################
-ENV DAPPER_RUN_ARGS --privileged -p 127.0.0.1:2345:2345 --name hbm_dev
-ENV DAPPER_SOURCE /go/src/github.com/kassisol/hbm
-ENV SHELL /bin/bash
+ENV DAPPER_RUN_ARGS="--privileged -p 127.0.0.1:2345:2345 --name hbm_dev"
+ENV DAPPER_SOURCE="/go/src/github.com/kassisol/hbm"
+ENV SHELL="/bin/bash"
 
 WORKDIR ${DAPPER_SOURCE}
 
@@ -27,5 +27,5 @@ ENV DOCKER_COMPOSE_VERSION=1.28.4 \
 RUN get-docker.sh $docker_version
 
 # Install Docker Compose
-RUN wget https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64 -O /usr/bin/docker-compose \
+RUN wget --progress=dot:giga https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64 -O /usr/bin/docker-compose \
 	&& chmod +x /usr/bin/docker-compose
