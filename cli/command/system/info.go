@@ -97,7 +97,7 @@ func runInfo(cmd *cobra.Command, args []string) {
 }
 
 func pluginEnabled() bool {
-	cli, err := client.NewEnvClient()
+	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return false
 	}
@@ -108,6 +108,7 @@ func pluginEnabled() bool {
 	}
 
 	for _, p := range info.Plugins.Authorization {
+
 		if p == "hbm" {
 			return true
 		}
