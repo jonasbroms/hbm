@@ -9,10 +9,10 @@ RUN apt-get update \
 		git
 
 ########## Dapper Configuration #####################
-ENV DAPPER_DOCKER_SOCKET true
-ENV DAPPER_SOURCE /go/src/github.com/kassisol/hbm
-ENV DAPPER_OUTPUT ./bin ./dist
-ENV SHELL /bin/bash
+ENV DAPPER_DOCKER_SOCKET="true"
+ENV DAPPER_SOURCE="/go/src/github.com/kassisol/hbm"
+ENV DAPPER_OUTPUT="./bin ./dist"
+ENV SHELL="/bin/bash"
 
 WORKDIR ${DAPPER_SOURCE}
 
