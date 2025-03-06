@@ -14,7 +14,7 @@ ARG ARCH=${HOST_ARCH}
 
 ARG APP_REPO=kassisol
 
-ARG docker_version=20.10.3
+ARG docker_version=27.3.1
 
 # Set up environment and export all ARGS as ENV
 ENV ARCH=${ARCH} \

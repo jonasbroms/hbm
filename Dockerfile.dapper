@@ -23,7 +23,7 @@ ARG ARCH=${HOST_ARCH}
 
 ARG APP_REPO=kassisol
 
-ARG docker_version=20.10.22
+ARG docker_version=27.3.1
 
 ARG DOCKER_URL_amd64=https://download.docker.com/linux/static/stable/x86_64/docker-${docker_version}.tgz
 
@@ -35,7 +35,7 @@ ENV DOCKER_URL=${DOCKER_URL_amd64} \
 	DAPPER_HOST_ARCH=${DAPPER_HOST_ARCH} \
 	GOPATH=/go \
 	GOARCH=$ARCH \
-	GO_VERSION=1.21.9
+	GO_VERSION=1.23.6
 
 ENV PATH=/go/bin:/usr/local/go/bin:$PATH
 
