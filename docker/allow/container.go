@@ -5,7 +5,6 @@ import (
 	"log/slog"
 	"net"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -44,14 +43,51 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 
 	if len(cc.HostConfig.Binds) > 0 {
 		for _, b := range cc.HostConfig.Binds {
-			vol := strings.Split(b, ":")
-
-			vol[0], _ = filepath.Abs(vol[0])
-			if !AllowVolume(vol[0], config) {
+			// Docker volume binding format: [host-src:]container-dest[:<options>]
+			// Split on : but need to handle edge cases
+			if b == "" {
 				return &types.AllowResult{
 					Allow: false,
 					Msg: map[string]string{
-						"text":           fmt.Sprintf("Volume %s is not allowed to be mounted", b),
+						"text":           "Empty volume binding not allowed",
+						"resource_type":  "volume",
+						"resource_value": b,
+					},
+				}
+			}
+
+			vol := strings.Split(b, ":")
+
+			// Ensure we have at least the source path
+			if len(vol) == 0 || vol[0] == "" {
+				return &types.AllowResult{
+					Allow: false,
+					Msg: map[string]string{
+						"text":           fmt.Sprintf("Invalid volume binding format - missing source path: %s", b),
+						"resource_type":  "volume",
+						"resource_value": b,
+					},
+				}
+			}
+
+			// Convert to absolute path and clean
+			absPath, err := filepath.Abs(vol[0])
+			if err != nil {
+				return &types.AllowResult{
+					Allow: false,
+					Msg: map[string]string{
+						"text":           fmt.Sprintf("Invalid volume path %s: %v", vol[0], err),
+						"resource_type":  "volume",
+						"resource_value": b,
+					},
+				}
+			}
+
+			if !AllowVolume(absPath, config) {
+				return &types.AllowResult{
+					Allow: false,
+					Msg: map[string]string{
+						"text":           fmt.Sprintf("Volume %s is not allowed to be mounted", absPath),
 						"resource_type":  "volume",
 						"resource_value": b,
 					},
@@ -346,16 +382,39 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 	if len(cc.HostConfig.Mounts) > 0 {
 		for _, mount := range cc.HostConfig.Mounts {
 			if mount.Type == "bind" {
-				if len(mount.Source) > 0 {
-					if !AllowVolume(mount.Source, config) {
-						return &types.AllowResult{
-							Allow: false,
-							Msg: map[string]string{
-								"text":           fmt.Sprintf("Volume %s is not allowed to be mounted", mount.Source),
-								"resource_type":  "volume",
-								"resource_value": mount.Source,
-							},
-						}
+				// Validate mount source is not empty or whitespace
+				if len(mount.Source) == 0 || strings.TrimSpace(mount.Source) == "" {
+					return &types.AllowResult{
+						Allow: false,
+						Msg: map[string]string{
+							"text":           "Empty or whitespace-only mount source not allowed",
+							"resource_type":  "volume",
+							"resource_value": mount.Source,
+						},
+					}
+				}
+
+				// Convert to absolute path and clean
+				absPath, err := filepath.Abs(mount.Source)
+				if err != nil {
+					return &types.AllowResult{
+						Allow: false,
+						Msg: map[string]string{
+							"text":           fmt.Sprintf("Invalid mount source path: %s", mount.Source),
+							"resource_type":  "volume",
+							"resource_value": mount.Source,
+						},
+					}
+				}
+
+				if !AllowVolume(absPath, config) {
+					return &types.AllowResult{
+						Allow: false,
+						Msg: map[string]string{
+							"text":           fmt.Sprintf("Volume %s is not allowed to be mounted", absPath),
+							"resource_type":  "volume",
+							"resource_value": mount.Source,
+						},
 					}
 				}
 			}
@@ -417,8 +476,16 @@ func GetPortBindingString(pb *nat.PortBinding) string {
 	return result
 }
 
+// AllowVolume checks if a volume path is allowed to be mounted based on policy
 func AllowVolume(vol string, config *types.Config) bool {
 	defer utils.RecoverFunc()
+
+	// Resolve symlinks to prevent symlink-based directory traversal attacks
+	resolvedVol, err := filepath.EvalSymlinks(vol)
+	if err != nil {
+		slog.Warn("Failed to resolve symlinks for volume path", "path", vol, "error", err)
+		return false
+	}
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
@@ -427,52 +494,22 @@ func AllowVolume(vol string, config *types.Config) bool {
 	}
 	defer p.End()
 
-	// Check for double dots in volume path
-	if strings.Contains(vol, "/..") {
-		return false
-	}
-	if strings.Contains(vol, "../") {
-		return false
-	}
-
-	// evaluatedVol, _ := filepath.EvalSymlinks(vol)
-	// if strings.Compare(vol, evaluatedVol) != 0 {
-	// 	return false
-	// }
-
-	// Check for one volume path
-	vo := objtypes.VolumeOptions{
-		Recursive: false,
-	}
-	if AllowMount(vol) {
-		vo.NoSuid = true
-	}
-	jsonVO := json.Encode(vo)
-	opts := strings.TrimSpace(jsonVO.String())
-
-	if p.Validate(config.Username, "volume", vol, opts) {
+	// Check exact match
+	if checkVolumePermissionWithPolicy(p, resolvedVol, resolvedVol, false, config) {
 		return true
 	}
 
-	// Check for recursive volume path
-	v := strings.Split(vol, "/")
+	// Check recursive parent permissions
+	parts := strings.Split(strings.TrimPrefix(resolvedVol, "/"), "/")
+	currentPath := "/"
 
-	val := make([]string, len(v))
-	val[0] = "/"
-
-	for i := 1; i < len(v); i++ {
-		val = append(val, v[i])
-
-		vo = objtypes.VolumeOptions{
-			Recursive: true,
+	for _, part := range parts {
+		if part == "" {
+			continue
 		}
-		if AllowMount(vol) {
-			vo.NoSuid = true
-		}
-		jsonVO = json.Encode(vo)
-		opts = strings.TrimSpace(jsonVO.String())
+		currentPath = filepath.Join(currentPath, part)
 
-		if p.Validate(config.Username, "volume", path.Join(val...), opts) {
+		if checkVolumePermissionWithPolicy(p, resolvedVol, currentPath, true, config) {
 			return true
 		}
 	}
@@ -480,7 +517,21 @@ func AllowVolume(vol string, config *types.Config) bool {
 	return false
 }
 
-func AllowMount(vol string) bool {
+// checkVolumePermissionWithPolicy checks the permissions against the policies
+func checkVolumePermissionWithPolicy(p policyobj.Policy, vol string, pathToCheck string, recursive bool, config *types.Config) bool {
+	vo := objtypes.VolumeOptions{
+		Recursive: recursive,
+		NoSuid:    HasNoSuidFlag(vol),
+	}
+
+	jsonVO := json.Encode(vo)
+	opts := strings.TrimSpace(jsonVO.String())
+
+	return p.Validate(config.Username, "volume", pathToCheck, opts)
+}
+
+// HasNoSuidFlag checks if path is mounted with nosuid flag
+func HasNoSuidFlag(vol string) bool {
 	result := false
 
 	entries, err := mount.New()
