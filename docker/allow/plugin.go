@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/juliengk/go-docker/image"
+	"github.com/kassisol/hbm/internal/image"
 	"github.com/kassisol/hbm/docker/allow/types"
 	policyobj "github.com/kassisol/hbm/object/policy"
 	"github.com/kassisol/hbm/version"

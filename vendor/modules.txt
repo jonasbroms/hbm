@@ -74,9 +74,6 @@ github.com/jinzhu/gorm/dialects/sqlite
 # github.com/jinzhu/inflection v1.0.1-0.20231016084002-bbe0a3e7399f
 ## explicit; go 1.15
 github.com/jinzhu/inflection
-# github.com/juliengk/go-docker v0.0.0-20180321163138-f5cda316edb7 => github.com/kassisol/go-docker v0.0.0-20180321163138-f5cda316edb7
-## explicit
-github.com/juliengk/go-docker/image
 # github.com/juliengk/go-mount v0.0.0-20170406141235-e7123cbaaaf6 => github.com/kassisol/go-mount v0.0.0-20170406141235-e7123cbaaaf6
 ## explicit
 github.com/juliengk/go-mount
@@ -198,5 +195,4 @@ gopkg.in/yaml.v3
 # gotest.tools/v3 v3.5.1
 ## explicit; go 1.17
 # github.com/juliengk/go-utils => github.com/jonasbroms/go-utils v0.0.0-20220910194142-e74a4beb9866
-# github.com/juliengk/go-docker => github.com/kassisol/go-docker v0.0.0-20180321163138-f5cda316edb7
 # github.com/juliengk/go-mount => github.com/kassisol/go-mount v0.0.0-20170406141235-e7123cbaaaf6

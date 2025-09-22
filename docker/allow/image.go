@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/juliengk/go-docker/image"
+	"github.com/kassisol/hbm/internal/image"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
 	"github.com/kassisol/hbm/docker/allow/types"
