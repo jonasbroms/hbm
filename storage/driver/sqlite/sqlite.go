@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"os"
 	"path"
 
 	"github.com/kassisol/hbm/storage"
@@ -31,6 +32,11 @@ func New(config string) (driver.Storager, error) {
 	db.LogMode(debug)
 
 	db.AutoMigrate(&AppConfig{}, &User{}, &Group{}, &Resource{}, &Collection{}, &Policy{}, &ContainerOwner{})
+
+	if err := os.Chmod(file, 0600); err != nil {
+		db.Close()
+		return nil, err
+	}
 
 	return &Config{DB: db}, nil
 }
