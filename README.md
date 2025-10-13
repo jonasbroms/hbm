@@ -29,7 +29,7 @@ Supported Docker versions with HBM.
 
 | HBM Version | Docker Version | Docker API |
 |-------------|----------------|------------|
-| 0.19.x      | 27.x           | 1.47    |
+| 0.19.x      | 27.x           | 1.47       |
 
 ## Open Source Licenses
 
