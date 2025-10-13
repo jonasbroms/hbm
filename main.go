@@ -18,18 +18,14 @@
 package main
 
 import (
+	"os"
+
 	"github.com/jonasbroms/hbm/cli/command"
-	"github.com/juliengk/go-utils/user"
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	u := user.New()
-
-	if !u.IsRoot() {
-		log.Error("You must be root to run that command")
-	}
-
 	cmd := command.NewHBMCommand()
-	cmd.Execute()
+	if err := cmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }

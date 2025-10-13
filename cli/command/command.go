@@ -1,7 +1,10 @@
 package command
 
 import (
+	"fmt"
+
 	"github.com/jonasbroms/hbm/cli/command/commands"
+	"github.com/juliengk/go-utils/user"
 	"github.com/spf13/cobra"
 )
 
@@ -40,6 +43,19 @@ func NewHBMCommand() *cobra.Command {
 		Use:   "hbm",
 		Short: "HBM is an application to authorize and manage authorized docker commands",
 		Long:  "HBM is an application to authorize and manage authorized docker commands",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// Allow help and version commands without root
+			if cmd.Name() == "help" || cmd.Name() == "version" {
+				return nil
+			}
+
+			// Default require root for all commands
+			u := user.New()
+			if !u.IsRoot() {
+				return fmt.Errorf("this command requires root privileges")
+			}
+			return nil
+		},
 	}
 
 	cmd.SetHelpTemplate(helpTemplate)

@@ -37,7 +37,6 @@ func serverInitConfig() {
 	_, err := exec.LookPath("docker")
 	if err != nil {
 		fmt.Println("Docker does not seem to be installed. Please check your installation.")
-
 		os.Exit(-1)
 	}
 
