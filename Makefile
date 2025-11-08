@@ -33,11 +33,11 @@ format:
 		gofmt -l -s -w "$$file"; \
 	done
 
-# Run golint
+# Run golangci-lint
 lint:
-	@echo "Running golint..."
-	@which golint > /dev/null || go install golang.org/x/lint/golint@latest
-	golint ./...
+	@echo "Running golangci-lint..."
+	@which golangci-lint > /dev/null || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	golangci-lint run
 
 # Lint shell scripts
 shellcheck:
