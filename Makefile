@@ -1,90 +1,73 @@
-TARGETS := $(shell ls scripts | grep -vE 'clean|dev|dockerlint|help|release|run-test|shellcheck|tag')
+# HBM
 
-TMUX := $(shell command -v tmux 2> /dev/null)
+.PHONY: all build clean release test format lint shellcheck dockerlint help
 
-.PHONY: .dapper
-.dapper:
-	@echo Downloading dapper
-	@curl -sL https://releases.rancher.com/dapper/latest/dapper-`uname -s`-`uname -m|sed 's/v7l//'` > .dapper.tmp
-	@@chmod +x .dapper.tmp
-	@./.dapper.tmp -v
-	@mv .dapper.tmp .dapper
+# Default target
+all: build
 
-.PHONY: .github-release
-.github-release:
-	@echo Downloading github-release
-	@curl -sL https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2 | tar xjO > .github-release.tmp
-	@@chmod +x .github-release.tmp
-	@./.github-release.tmp -v
-	@mv .github-release.tmp .github-release
+# Build the HBM binary with version info
+build:
+	@./scripts/build-target
 
-.PHONY: .tmass
-.tmass:
-	@echo Downloading tmass
-	@curl -sL https://github.com/juliengk/tmass/releases/download/0.3.0/tmass -o .tmass.tmp
-	@@chmod +x .tmass.tmp
-	@./.tmass.tmp version
-	@mv .tmass.tmp .tmass
-
-.PHONY: $(TARGETS)
-$(TARGETS): .dapper
-	./.dapper $@
-
-.PHONY: clean
+# Clean build artifacts
 clean:
-	@./scripts/clean
+	@echo "Cleaning build artifacts..."
+	rm -rf bin/ dist/
+	rm -f hbm hbm-test
+	find . -name '*.test' -delete
 
-.PHONY: dev
-dev: .dapper .tmass
-ifndef TMUX
-	$(error "tmux is not available, please install it")
-endif
+# Create GitHub release
+release:
+	@./scripts/release
 
-	./.tmass load -l scripts/dev/tmux/ hbm
-	tmux a -d -t hbm
+# Run tests
+test:
+	@echo "Running Go tests... Don't have any of these..."
+	go test ./...
 
-.PHONY: help
-help:
-	@./scripts/help
-
-.PHONY: release
-release: .github-release
-	./scripts/release
-
-.PHONY: run-test
-run-test:
-	./scripts/run-test
-
-.PHONY: tag
-tag:
-	./scripts/tag
-
-.PHONY: shellcheck
-shellcheck:
-	@for file in $(shell find . -type f -executable -not -path "./.git/*" -not -path "./vendor/*"); do \
-		echo "Validating : $$file"; \
-		docker container run --rm --mount type=bind,src=$$PWD,dst=/mnt,ro koalaman/shellcheck -e SC2086 -e SC2046 -e SC1090 "$$file"; \
-		if [ $$? -gt 0 ]; then \
-			continue; \
-		fi; \
-	done;
-
-.PHONY: dockerlint
-dockerlint:
-	@for file in $(shell find . -name 'Dockerfile*'); do \
-		echo "Validating : $$file"; \
-		docker container run -i --rm hadolint/hadolint hadolint --ignore DL3018 --ignore DL3013 - < $$file; \
-	done;
-
-.PHONY: format
+# Format Go code
 format:
-	@for file in $(shell find . -name '*.go' -type f -not -path "./.git/*" -not -path "./vendor/*"); do \
+	@echo "Formatting Go code..."
+	@for file in $$(find . -name '*.go' -type f -not -path "./.git/*" -not -path "./vendor/*"); do \
 		echo "Formatting: $$file"; \
 		gofmt -l -s -w "$$file"; \
-		if [ $$? -gt 0 ]; then \
-			continue; \
-		fi; \
-	done;
+	done
 
+# Run golint
+lint:
+	@echo "Running golint..."
+	@which golint > /dev/null || go install golang.org/x/lint/golint@latest
+	golint ./...
 
-.DEFAULT_GOAL := ci
+# Lint shell scripts
+shellcheck:
+	@echo "Linting shell scripts..."
+	@for file in $$(find . -type f -name '*.sh' -not -path "./.git/*" -not -path "./vendor/*"); do \
+		echo "Checking: $$file"; \
+		docker run --rm -v "$$PWD:/mnt:ro" koalaman/shellcheck -e SC2086 -e SC2046 -e SC1090 "$$file" || true; \
+	done
+
+# Lint Dockerfiles
+dockerlint:
+	@echo "Linting Dockerfiles..."
+	@for file in $$(find . -name 'Dockerfile*' -not -name '*.dapper'); do \
+		echo "Checking: $$file"; \
+		docker run -i --rm hadolint/hadolint hadolint --ignore DL3018 --ignore DL3013 - < "$$file" || true; \
+	done
+
+# Show help
+help:
+	@echo "HBM"
+	@echo ""
+	@echo "Targets:"
+	@echo "  make build       - Build HBM binary with version info"
+	@echo "  make clean       - Remove build artifacts"
+	@echo "  make release     - Create GitHub release"
+	@echo "  make test        - Run Go unit tests"
+	@echo "  make format      - Format Go code with gofmt"
+	@echo "  make lint        - Run golint"
+	@echo "  make shellcheck  - Lint shell scripts"
+	@echo "  make dockerlint  - Lint Dockerfiles"
+	@echo "  make help        - Show this help"
+
+.DEFAULT_GOAL := build
