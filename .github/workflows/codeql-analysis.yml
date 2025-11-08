@@ -1,7 +1,7 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+# CodeQL security analysis for HBM
+# Analyzes Go code for security vulnerabilities and coding errors
 
-name: "CodeQL Advanced"
+name: "CodeQL Security Analysis"
 
 on:
   push:
@@ -50,11 +50,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Add any setup steps before running the `github/codeql-action/init` action.
-    # This includes steps like installing compilers or runtimes (`actions/setup-node`
-    # or others). This is typically only required for manual builds.
-    # - name: Setup runtime (example)
-    #   uses: actions/setup-example@v1
+    # Setup Go for building the project
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.25'
+        cache: true
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
