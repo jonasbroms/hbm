@@ -9,7 +9,6 @@ require (
 	github.com/jinzhu/gorm v1.9.17-0.20211120011537-5c235b72a414
 	github.com/juliengk/go-mount v0.0.0-20170406141235-e7123cbaaaf6
 	github.com/juliengk/go-utils v0.0.0-00010101000000-000000000000
-	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.10.1
 )
 

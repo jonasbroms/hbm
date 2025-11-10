@@ -2,12 +2,13 @@ package allow
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 )
 
 func Action(config *types.Config, action, cmd string) *types.AllowResult {
@@ -15,9 +16,8 @@ func Action(config *types.Config, action, cmd string) *types.AllowResult {
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 

@@ -1,6 +1,8 @@
 package system
 
 import (
+	"log/slog"
+	"os"
 	"reflect"
 
 	"github.com/jonasbroms/hbm/docker/endpoint"
@@ -12,7 +14,6 @@ import (
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/filedir"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -39,18 +40,21 @@ func NewInitCommand() *cobra.Command {
 
 func runInit(cmd *cobra.Command, args []string) {
 	if err := filedir.CreateDirIfNotExist(adf.AppPath, false, 0700); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to create application directory", "error", err)
+		os.Exit(1)
 	}
 
 	s, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize config store", "error", err)
+		os.Exit(1)
 	}
 	defer s.End()
 
 	config, err := s.List(map[string]string{})
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list configs", "error", err)
+		os.Exit(1)
 	}
 
 	if len(config) == 0 {
@@ -60,7 +64,8 @@ func runInit(cmd *cobra.Command, args []string) {
 
 	g, err := groupobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize group store", "error", err)
+		os.Exit(1)
 	}
 	defer g.End()
 
@@ -74,7 +79,8 @@ func runInit(cmd *cobra.Command, args []string) {
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize resource store", "error", err)
+		os.Exit(1)
 	}
 	defer r.End()
 
@@ -82,7 +88,8 @@ func runInit(cmd *cobra.Command, args []string) {
 		for _, u := range *endpoint.GetUris() {
 			if !r.Find(u.Action) {
 				if err := r.Add(u.Action, "action", u.Action, []string{}); err != nil {
-					log.Fatal(err)
+					slog.Error("Failed to add action resource", "error", err)
+					os.Exit(1)
 				}
 			}
 		}
@@ -91,7 +98,8 @@ func runInit(cmd *cobra.Command, args []string) {
 	if initConfig {
 		res, err := resourcepkg.NewDriver("config")
 		if err != nil {
-			log.Fatal(err)
+			slog.Error("Failed to create config driver", "error", err)
+			os.Exit(1)
 		}
 
 		val := utils.GetReflectValue(reflect.Slice, res.List())
@@ -100,7 +108,8 @@ func runInit(cmd *cobra.Command, args []string) {
 		for _, c := range v {
 			if !r.Find(c.Key) {
 				if err := r.Add(c.Key, "config", c.Key, []string{}); err != nil {
-					log.Fatal(err)
+					slog.Error("Failed to add config resource", "error", err)
+					os.Exit(1)
 				}
 			}
 		}

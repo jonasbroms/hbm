@@ -2,11 +2,12 @@ package group
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	groupobj "github.com/jonasbroms/hbm/object/group"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,8 @@ func runFind(cmd *cobra.Command, args []string) {
 
 	g, err := groupobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize group store", "error", err)
+		os.Exit(1)
 	}
 	defer g.End()
 

@@ -1,10 +1,12 @@
 package user
 
 import (
+	"log/slog"
+	"os"
+
 	userobj "github.com/jonasbroms/hbm/object/user"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -26,12 +28,14 @@ func runRemove(cmd *cobra.Command, args []string) {
 
 	u, err := userobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize user store", "error", err)
+		os.Exit(1)
 	}
 	defer u.End()
 
 	if err := u.Remove(args[0]); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to remove user", "error", err)
+		os.Exit(1)
 	}
 }
 

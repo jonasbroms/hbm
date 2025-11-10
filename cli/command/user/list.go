@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 	"text/tabwriter"
@@ -9,7 +10,6 @@ import (
 	userobj "github.com/jonasbroms/hbm/object/user"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	u, err := userobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize user store", "error", err)
+		os.Exit(1)
 	}
 	defer u.End()
 
@@ -44,7 +45,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	users, err := u.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list users", "error", err)
+		os.Exit(1)
 	}
 
 	if len(users) > 0 {

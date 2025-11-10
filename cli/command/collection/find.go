@@ -2,11 +2,12 @@ package collection
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	collectionobj "github.com/jonasbroms/hbm/object/collection"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,8 @@ func runFind(cmd *cobra.Command, args []string) {
 
 	c, err := collectionobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize collection store", "error", err)
+		os.Exit(1)
 	}
 	defer c.End()
 

@@ -2,14 +2,15 @@ package allow
 
 import (
 	"fmt"
+	"log/slog"
 	"net/url"
+	"os"
 
 	"github.com/docker/go-plugins-helpers/authorization"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	"github.com/jonasbroms/hbm/internal/image"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"
-	log "github.com/sirupsen/logrus"
 )
 
 func PluginPull(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -41,9 +42,8 @@ func PluginPull(req authorization.Request, config *types.Config) *types.AllowRes
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 

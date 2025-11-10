@@ -1,10 +1,12 @@
 package resource
 
 import (
+	"log/slog"
+	"os"
+
 	resourceobj "github.com/jonasbroms/hbm/object/resource"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +36,8 @@ func runMember(cmd *cobra.Command, args []string) {
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize resource store", "error", err)
+		os.Exit(1)
 	}
 	defer r.End()
 

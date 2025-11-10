@@ -1,10 +1,12 @@
 package config
 
 import (
+	"log/slog"
+	"os"
+
 	configobj "github.com/jonasbroms/hbm/object/config"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -25,12 +27,14 @@ func runSet(cmd *cobra.Command, args []string) {
 
 	c, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize config store", "error", err)
+		os.Exit(1)
 	}
 	defer c.End()
 
 	if err := c.Set(args[0], args[1]); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to set config", "error", err)
+		os.Exit(1)
 	}
 }
 

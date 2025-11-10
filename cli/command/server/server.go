@@ -1,7 +1,7 @@
 package server
 
 import (
-	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -13,7 +13,6 @@ import (
 	"github.com/jonasbroms/hbm/plugin"
 	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils/filedir"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,22 +35,24 @@ func serverInitConfig() {
 
 	_, err := exec.LookPath("docker")
 	if err != nil {
-		fmt.Println("Docker does not seem to be installed. Please check your installation.")
-		os.Exit(-1)
+		slog.Error("Docker does not seem to be installed. Please check your installation.")
+		os.Exit(1)
 	}
 
 	if err := filedir.CreateDirIfNotExist(dockerPluginPath, false, 0755); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to create plugin directory", "error", err)
+		os.Exit(1)
 	}
 
 	if !filedir.FileExists(dockerPluginFile) {
 		err := os.WriteFile(dockerPluginFile, pluginSpecContent, 0644)
 		if err != nil {
-			log.Fatal(err)
+			slog.Error("Failed to write plugin spec file", "error", err)
+			os.Exit(1)
 		}
 	}
 
-	log.Info("Server has completed initialization")
+	slog.Info("Server has completed initialization")
 }
 
 func runStart(cmd *cobra.Command, args []string) {
@@ -64,21 +65,27 @@ func runStart(cmd *cobra.Command, args []string) {
 	go func() {
 		p, err := plugin.NewPlugin(adf.AppPath)
 		if err != nil {
-			log.Fatal(err)
+			slog.Error("Failed to create plugin", "error", err)
+			os.Exit(1)
 		}
 
 		h := authorization.NewHandler(p)
 
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Info("HBM server")
+		slog.Info("HBM server starting",
+			"version", version.Version,
+			"app_path", adf.AppPath)
 
-		log.Info("Listening on socket file")
-		log.Fatal(h.ServeUnix("hbm", 0))
+		slog.Info("Listening on socket",
+			"socket", "unix:///run/docker/plugins/hbm.sock")
+
+		if err := h.ServeUnix("hbm", 0); err != nil {
+			slog.Error("Server failed", "error", err)
+			os.Exit(1)
+		}
 	}()
 
 	s := <-ch
-	log.Infof("Processing signal '%s'", s)
+	slog.Info("Received shutdown signal", "signal", s.String())
 }
 
 var serverDescription = `

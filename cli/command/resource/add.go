@@ -2,12 +2,13 @@ package resource
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	resourcepkg "github.com/jonasbroms/hbm/docker/resource"
 	resourceobj "github.com/jonasbroms/hbm/object/resource"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -39,12 +40,14 @@ func runAdd(cmd *cobra.Command, args []string) {
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize resource store", "error", err)
+		os.Exit(1)
 	}
 	defer r.End()
 
 	if err := r.Add(args[0], resourceAddType, resourceAddValue, resourceAddOption); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to add resource", "error", err)
+		os.Exit(1)
 	}
 }
 

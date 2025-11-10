@@ -1,14 +1,15 @@
 package allow
 
 import (
+	"log/slog"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"
-	log "github.com/sirupsen/logrus"
 )
 
 func ContainerOwner(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -16,9 +17,8 @@ func ContainerOwner(req authorization.Request, config *types.Config) *types.Allo
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 

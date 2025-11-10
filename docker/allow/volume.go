@@ -2,6 +2,8 @@ package allow
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -10,7 +12,6 @@ import (
 	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
-	log "github.com/sirupsen/logrus"
 )
 
 func VolumeCreate(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -25,9 +26,8 @@ func VolumeCreate(req authorization.Request, config *types.Config) *types.AllowR
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 

@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/url"
 	"regexp"
 
@@ -98,7 +99,8 @@ func (p *plugin) setcontainerowner(cname string, req authorization.Request) erro
 
 	s.SetContainerOwner(username, cname, rjson.Id)
 
-	//fmt.Println("did owner with:", username, cname, rjson.Id)
+	// Audit log for container creation
+	slog.Info("Container ownership recorded", "event_type", "container_ownership", "user", username, "container_name", cname, "container_id", rjson.Id)
 
 	return nil
 }

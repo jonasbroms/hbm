@@ -3,6 +3,8 @@ package system
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/docker/docker/client"
 	collectionobj "github.com/jonasbroms/hbm/object/collection"
@@ -14,7 +16,6 @@ import (
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -35,37 +36,43 @@ func runInfo(cmd *cobra.Command, args []string) {
 
 	cfg, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize config store", "error", err)
+		os.Exit(1)
 	}
 	defer cfg.End()
 
 	p, err := policyobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize policy store", "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 
 	g, err := groupobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize group store", "error", err)
+		os.Exit(1)
 	}
 	defer g.End()
 
 	u, err := userobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize user store", "error", err)
+		os.Exit(1)
 	}
 	defer u.End()
 
 	c, err := collectionobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize collection store", "error", err)
+		os.Exit(1)
 	}
 	defer c.End()
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize resource store", "error", err)
+		os.Exit(1)
 	}
 	defer r.End()
 

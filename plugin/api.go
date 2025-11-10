@@ -1,6 +1,8 @@
 package plugin
 
 import (
+	"log/slog"
+	"os"
 	"runtime/debug"
 
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -11,7 +13,6 @@ import (
 	groupobj "github.com/jonasbroms/hbm/object/group"
 	"github.com/jonasbroms/hbm/pkg/uri"
 	"github.com/jonasbroms/hbm/version"
-	log "github.com/sirupsen/logrus"
 )
 
 type Api struct {
@@ -29,24 +30,22 @@ func NewApi(uriinfo *uri.URIInfo, appPath string) (*Api, error) {
 func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 	s, err := configobj.New("sqlite", a.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create config object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer s.End()
 
 	g, err := groupobj.New("sqlite", a.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create group object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer g.End()
 
 	defer func() {
 		if r := recover(); r != nil {
-			log.Warn("Recovered panic: ", r)
-			log.Warnf("%s", debug.Stack())
+			slog.Warn("Recovered panic", "panic", r)
+			slog.Warn("Stack trace", "trace", string(debug.Stack()))
 
 			allow, _ := s.Get("default-allow-action-error")
 			err := "an error occurred; contact your system administrator"
@@ -98,29 +97,46 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 		}
 	}
 
-	// Log event
-	fields := log.Fields{
-		"user":          username,
-		"admin":         isAdmin,
-		"allowed":       r.Allow,
-		"authorization": aR,
-		"action":        u.Action,
-	}
-
+	// Log event with detailed audit information
 	if !r.Allow {
-		fields["msg"] = r.Msg["text"]
+		args := []any{
+			"event_type", "docker_authorization",
+			"user", username,
+			"is_admin", isAdmin,
+			"allowed", r.Allow,
+			"authorization", aR,
+			"action", u.Action,
+			"command", u.CmdName,
+			"request_method", req.RequestMethod,
+			"request_uri", req.RequestURI,
+			"denial_reason", r.Msg["text"],
+		}
 
 		v, ok := r.Msg["resource_type"]
 		if ok {
-			fields["resource_type"] = v
+			args = append(args, "resource_type", v)
 		}
 		v, ok = r.Msg["resource_value"]
 		if ok {
-			fields["resource_value"] = v
+			args = append(args, "resource_value", v)
 		}
-	}
 
-	log.WithFields(fields).Info()
+		// Log denials as warnings for visibility
+		slog.Warn("Authorization denied", args...)
+	} else {
+		// Log allowed actions as info
+		slog.Info("Authorization granted",
+			"event_type", "docker_authorization",
+			"user", username,
+			"is_admin", isAdmin,
+			"allowed", r.Allow,
+			"authorization", aR,
+			"action", u.Action,
+			"command", u.CmdName,
+			"request_method", req.RequestMethod,
+			"request_uri", req.RequestURI,
+		)
+	}
 
 	// If Docker command is not allowed, return
 	if !r.Allow {

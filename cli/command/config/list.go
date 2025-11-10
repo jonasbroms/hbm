@@ -2,13 +2,13 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"text/tabwriter"
 
 	configobj "github.com/jonasbroms/hbm/object/config"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	c, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize config store", "error", err)
+		os.Exit(1)
 	}
 	defer c.End()
 
@@ -43,7 +44,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	configs, err := c.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list configs", "error", err)
+		os.Exit(1)
 	}
 
 	if len(configs) > 0 {

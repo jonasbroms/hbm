@@ -2,13 +2,13 @@ package policy
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"text/tabwriter"
 
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	p, err := policyobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize policy store", "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 
@@ -43,7 +44,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	policies, err := p.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list policies", "error", err)
+		os.Exit(1)
 	}
 
 	if len(policies) > 0 {

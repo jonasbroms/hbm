@@ -2,6 +2,7 @@ package resource
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 	"text/tabwriter"
@@ -9,7 +10,6 @@ import (
 	resourceobj "github.com/jonasbroms/hbm/object/resource"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize resource store", "error", err)
+		os.Exit(1)
 	}
 	defer r.End()
 
@@ -44,7 +45,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	resources, err := r.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list resources", "error", err)
+		os.Exit(1)
 	}
 
 	if len(resources) > 0 {

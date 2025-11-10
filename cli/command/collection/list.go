@@ -2,6 +2,7 @@ package collection
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 	"text/tabwriter"
@@ -9,7 +10,6 @@ import (
 	collectionobj "github.com/jonasbroms/hbm/object/collection"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	c, err := collectionobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize collection store", "error", err)
+		os.Exit(1)
 	}
 	defer c.End()
 
@@ -44,7 +45,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	collections, err := c.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list collections", "error", err)
+		os.Exit(1)
 	}
 
 	if len(collections) > 0 {

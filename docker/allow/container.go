@@ -2,7 +2,9 @@ package allow
 
 import (
 	"fmt"
+	"log/slog"
 	"net"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -17,7 +19,6 @@ import (
 	"github.com/juliengk/go-mount"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
-	log "github.com/sirupsen/logrus"
 )
 
 func ContainerCreate(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -36,9 +37,8 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 
@@ -422,9 +422,8 @@ func AllowVolume(vol string, config *types.Config) bool {
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"version": version.Version,
-		}).Fatal(err)
+		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 

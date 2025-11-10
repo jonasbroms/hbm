@@ -2,6 +2,7 @@ package group
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 	"text/tabwriter"
@@ -9,7 +10,6 @@ import (
 	groupobj "github.com/jonasbroms/hbm/object/group"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	g, err := groupobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize group store", "error", err)
+		os.Exit(1)
 	}
 	defer g.End()
 
@@ -44,7 +45,8 @@ func runList(cmd *cobra.Command, args []string) {
 
 	groups, err := g.List(filters)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to list groups", "error", err)
+		os.Exit(1)
 	}
 
 	if len(groups) > 0 {

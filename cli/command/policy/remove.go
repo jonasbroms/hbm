@@ -1,10 +1,12 @@
 package policy
 
 import (
+	"log/slog"
+	"os"
+
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -26,12 +28,14 @@ func runRemove(cmd *cobra.Command, args []string) {
 
 	p, err := policyobj.New("sqlite", adf.AppPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to initialize policy store", "error", err)
+		os.Exit(1)
 	}
 	defer p.End()
 
 	if err := p.Remove(args[0]); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to remove policy", "error", err)
+		os.Exit(1)
 	}
 }
 
