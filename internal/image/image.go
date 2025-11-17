@@ -1,5 +1,7 @@
 package image
 
+// From github.com/juliengk/go-docker/image
+
 import (
 	"fmt"
 	"strings"
