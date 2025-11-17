@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	resourcepkg "github.com/jonasbroms/hbm/docker/resource"
+	"github.com/jonasbroms/hbm/internal/image"
+	"github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/storage"
+	"github.com/jonasbroms/hbm/storage/driver"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
 	"github.com/juliengk/go-utils/validation"
-	resourcepkg "github.com/kassisol/hbm/docker/resource"
-	"github.com/kassisol/hbm/internal/image"
-	"github.com/kassisol/hbm/object/types"
-	"github.com/kassisol/hbm/storage"
-	"github.com/kassisol/hbm/storage/driver"
 )
 
 type Resource interface {

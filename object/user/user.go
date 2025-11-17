@@ -3,9 +3,9 @@ package user
 import (
 	"fmt"
 
+	"github.com/jonasbroms/hbm/storage"
+	"github.com/jonasbroms/hbm/storage/driver"
 	"github.com/juliengk/go-utils/validation"
-	"github.com/kassisol/hbm/storage"
-	"github.com/kassisol/hbm/storage/driver"
 )
 
 type User interface {

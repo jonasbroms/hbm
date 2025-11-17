@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"github.com/kassisol/hbm/object/types"
+	"github.com/jonasbroms/hbm/object/types"
 )
 
 type Storager interface {

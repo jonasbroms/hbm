@@ -1,8 +1,8 @@
 package dns
 
 import (
-	"github.com/kassisol/hbm/docker/resource"
-	"github.com/kassisol/hbm/docker/resource/driver"
+	"github.com/jonasbroms/hbm/docker/resource"
+	"github.com/jonasbroms/hbm/docker/resource/driver"
 )
 
 type Config struct{}

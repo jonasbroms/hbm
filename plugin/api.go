@@ -4,13 +4,13 @@ import (
 	"runtime/debug"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/kassisol/hbm/docker/allow"
-	"github.com/kassisol/hbm/docker/allow/types"
-	"github.com/kassisol/hbm/docker/endpoint"
-	configobj "github.com/kassisol/hbm/object/config"
-	groupobj "github.com/kassisol/hbm/object/group"
-	"github.com/kassisol/hbm/pkg/uri"
-	"github.com/kassisol/hbm/version"
+	"github.com/jonasbroms/hbm/docker/allow"
+	"github.com/jonasbroms/hbm/docker/allow/types"
+	"github.com/jonasbroms/hbm/docker/endpoint"
+	configobj "github.com/jonasbroms/hbm/object/config"
+	groupobj "github.com/jonasbroms/hbm/object/group"
+	"github.com/jonasbroms/hbm/pkg/uri"
+	"github.com/jonasbroms/hbm/version"
 	log "github.com/sirupsen/logrus"
 )
 

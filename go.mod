@@ -1,4 +1,4 @@
-module github.com/kassisol/hbm
+module github.com/jonasbroms/hbm
 
 go 1.25.4
 

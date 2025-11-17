@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 
+	configobj "github.com/jonasbroms/hbm/object/config"
+	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	configobj "github.com/kassisol/hbm/object/config"
-	"github.com/kassisol/hbm/pkg/adf"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

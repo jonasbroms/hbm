@@ -5,10 +5,10 @@ import (
 	"net/url"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/kassisol/hbm/docker/allow/types"
-	"github.com/kassisol/hbm/internal/image"
-	policyobj "github.com/kassisol/hbm/object/policy"
-	"github.com/kassisol/hbm/version"
+	"github.com/jonasbroms/hbm/docker/allow/types"
+	"github.com/jonasbroms/hbm/internal/image"
+	policyobj "github.com/jonasbroms/hbm/object/policy"
+	"github.com/jonasbroms/hbm/version"
 	log "github.com/sirupsen/logrus"
 )
 

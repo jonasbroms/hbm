@@ -3,7 +3,7 @@ package policy
 import (
 	"strconv"
 
-	"github.com/kassisol/hbm/pkg/utils"
+	"github.com/jonasbroms/hbm/pkg/utils"
 )
 
 func (c *Config) allowPort(username, port string) bool {

@@ -3,10 +3,10 @@ package port
 import (
 	"fmt"
 
+	"github.com/jonasbroms/hbm/docker/resource"
+	"github.com/jonasbroms/hbm/docker/resource/driver"
+	"github.com/jonasbroms/hbm/pkg/utils"
 	"github.com/juliengk/go-utils/validation"
-	"github.com/kassisol/hbm/docker/resource"
-	"github.com/kassisol/hbm/docker/resource/driver"
-	"github.com/kassisol/hbm/pkg/utils"
 )
 
 type Config struct{}

@@ -10,13 +10,13 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/jonasbroms/hbm/docker/allow/types"
+	policyobj "github.com/jonasbroms/hbm/object/policy"
+	objtypes "github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-mount"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
-	"github.com/kassisol/hbm/docker/allow/types"
-	policyobj "github.com/kassisol/hbm/object/policy"
-	objtypes "github.com/kassisol/hbm/object/types"
-	"github.com/kassisol/hbm/version"
 	log "github.com/sirupsen/logrus"
 )
 

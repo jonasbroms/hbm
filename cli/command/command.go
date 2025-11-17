@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/kassisol/hbm/cli/command/commands"
+	"github.com/jonasbroms/hbm/cli/command/commands"
 	"github.com/spf13/cobra"
 )
 

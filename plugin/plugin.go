@@ -6,8 +6,8 @@ import (
 	"regexp"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/kassisol/hbm/pkg/uri"
-	"github.com/kassisol/hbm/storage"
+	"github.com/jonasbroms/hbm/pkg/uri"
+	"github.com/jonasbroms/hbm/storage"
 )
 
 type plugin struct {

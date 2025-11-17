@@ -5,9 +5,9 @@ import (
 	"os"
 	"text/tabwriter"
 
+	policyobj "github.com/jonasbroms/hbm/object/policy"
+	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	policyobj "github.com/kassisol/hbm/object/policy"
-	"github.com/kassisol/hbm/pkg/adf"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

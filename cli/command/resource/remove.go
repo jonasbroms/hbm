@@ -1,9 +1,9 @@
 package resource
 
 import (
+	resourceobj "github.com/jonasbroms/hbm/object/resource"
+	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	resourceobj "github.com/kassisol/hbm/object/resource"
-	"github.com/kassisol/hbm/pkg/adf"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

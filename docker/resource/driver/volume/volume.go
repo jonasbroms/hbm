@@ -3,9 +3,9 @@ package volume
 import (
 	"fmt"
 
+	"github.com/jonasbroms/hbm/docker/resource"
+	"github.com/jonasbroms/hbm/docker/resource/driver"
 	"github.com/juliengk/go-utils"
-	"github.com/kassisol/hbm/docker/resource"
-	"github.com/kassisol/hbm/docker/resource/driver"
 )
 
 type Config struct {

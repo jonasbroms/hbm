@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kassisol/hbm/docker/resource/driver"
+	"github.com/jonasbroms/hbm/docker/resource/driver"
 )
 
 type Initialize func() (driver.Resourcer, error)

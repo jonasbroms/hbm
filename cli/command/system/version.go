@@ -1,7 +1,7 @@
 package system
 
 import (
-	"github.com/kassisol/hbm/version"
+	"github.com/jonasbroms/hbm/version"
 	"github.com/spf13/cobra"
 )
 

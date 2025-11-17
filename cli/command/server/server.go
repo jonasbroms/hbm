@@ -9,10 +9,10 @@ import (
 	"syscall"
 
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/jonasbroms/hbm/pkg/adf"
+	"github.com/jonasbroms/hbm/plugin"
+	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils/filedir"
-	"github.com/kassisol/hbm/pkg/adf"
-	"github.com/kassisol/hbm/plugin"
-	"github.com/kassisol/hbm/version"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

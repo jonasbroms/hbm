@@ -3,15 +3,15 @@ package system
 import (
 	"reflect"
 
+	"github.com/jonasbroms/hbm/docker/endpoint"
+	resourcepkg "github.com/jonasbroms/hbm/docker/resource"
+	rconfigdrv "github.com/jonasbroms/hbm/docker/resource/driver/config"
+	configobj "github.com/jonasbroms/hbm/object/config"
+	groupobj "github.com/jonasbroms/hbm/object/group"
+	resourceobj "github.com/jonasbroms/hbm/object/resource"
+	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/filedir"
-	"github.com/kassisol/hbm/docker/endpoint"
-	resourcepkg "github.com/kassisol/hbm/docker/resource"
-	rconfigdrv "github.com/kassisol/hbm/docker/resource/driver/config"
-	configobj "github.com/kassisol/hbm/object/config"
-	groupobj "github.com/kassisol/hbm/object/group"
-	resourceobj "github.com/kassisol/hbm/object/resource"
-	"github.com/kassisol/hbm/pkg/adf"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

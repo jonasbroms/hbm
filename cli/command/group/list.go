@@ -6,9 +6,9 @@ import (
 	"strings"
 	"text/tabwriter"
 
+	groupobj "github.com/jonasbroms/hbm/object/group"
+	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/juliengk/go-utils"
-	groupobj "github.com/kassisol/hbm/object/group"
-	"github.com/kassisol/hbm/pkg/adf"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

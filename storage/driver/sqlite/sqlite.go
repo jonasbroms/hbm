@@ -4,8 +4,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/kassisol/hbm/storage"
-	"github.com/kassisol/hbm/storage/driver"
+	"github.com/jonasbroms/hbm/storage"
+	"github.com/jonasbroms/hbm/storage/driver"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"

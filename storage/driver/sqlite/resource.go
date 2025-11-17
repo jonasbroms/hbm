@@ -1,7 +1,7 @@
 package sqlite
 
 import (
-	"github.com/kassisol/hbm/object/types"
+	"github.com/jonasbroms/hbm/object/types"
 )
 
 func (c *Config) AddResource(name, rtype, value, options string) {

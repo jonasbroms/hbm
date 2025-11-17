@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/jonasbroms/hbm/cli/command"
+	"github.com/jonasbroms/hbm/cli/command/commands"
 	"github.com/juliengk/go-utils/filedir"
-	"github.com/kassisol/hbm/cli/command"
-	"github.com/kassisol/hbm/cli/command/commands"
 )
 
 func main() {

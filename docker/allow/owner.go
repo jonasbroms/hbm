@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/kassisol/hbm/docker/allow/types"
-	policyobj "github.com/kassisol/hbm/object/policy"
-	"github.com/kassisol/hbm/version"
+	"github.com/jonasbroms/hbm/docker/allow/types"
+	policyobj "github.com/jonasbroms/hbm/object/policy"
+	"github.com/jonasbroms/hbm/version"
 	log "github.com/sirupsen/logrus"
 )
 

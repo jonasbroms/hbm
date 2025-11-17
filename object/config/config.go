@@ -3,10 +3,10 @@ package config
 import (
 	"strconv"
 
-	configpkg "github.com/kassisol/hbm/config"
-	"github.com/kassisol/hbm/object/types"
-	"github.com/kassisol/hbm/storage"
-	"github.com/kassisol/hbm/storage/driver"
+	configpkg "github.com/jonasbroms/hbm/config"
+	"github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/storage"
+	"github.com/jonasbroms/hbm/storage/driver"
 )
 
 type Conf interface {

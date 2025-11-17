@@ -7,13 +7,13 @@ import (
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/jonasbroms/hbm/docker/allow/types"
+	"github.com/jonasbroms/hbm/internal/image"
+	policyobj "github.com/jonasbroms/hbm/object/policy"
+	objtypes "github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
-	"github.com/kassisol/hbm/docker/allow/types"
-	"github.com/kassisol/hbm/internal/image"
-	policyobj "github.com/kassisol/hbm/object/policy"
-	objtypes "github.com/kassisol/hbm/object/types"
-	"github.com/kassisol/hbm/version"
 	log "github.com/sirupsen/logrus"
 )
 
