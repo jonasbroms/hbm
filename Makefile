@@ -1,6 +1,6 @@
 # HBM
 
-.PHONY: all build clean release test format lint shellcheck dockerlint help
+.PHONY: all build clean release test vendor format lint shellcheck dockerlint help
 
 # Default target
 all: build
@@ -24,6 +24,13 @@ release:
 test:
 	@echo "Running Go tests... Don't have any of these..."
 	go test ./...
+
+# Vendor and clean
+vendor:
+	@echo "Vendoring dependencies"
+	go mod vendor
+	@echo "Cleaning"
+	go mod tidy
 
 # Format Go code
 format:
