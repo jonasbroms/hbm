@@ -24,6 +24,12 @@ func New(config string) (driver.Storager, error) {
 
 	file := path.Join(config, "data.db")
 
+	f, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY, 0600)
+	if err != nil {
+		return nil, err
+	}
+	f.Close()
+
 	db, err := gorm.Open("sqlite3", file)
 	if err != nil {
 		return nil, err
@@ -32,11 +38,6 @@ func New(config string) (driver.Storager, error) {
 	db.LogMode(debug)
 
 	db.AutoMigrate(&AppConfig{}, &User{}, &Group{}, &Resource{}, &Collection{}, &Policy{}, &ContainerOwner{})
-
-	if err := os.Chmod(file, 0600); err != nil {
-		db.Close()
-		return nil, err
-	}
 
 	return &Config{DB: db}, nil
 }
