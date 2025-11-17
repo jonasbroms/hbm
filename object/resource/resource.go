@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kassisol/hbm/internal/image"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
 	"github.com/juliengk/go-utils/validation"
 	resourcepkg "github.com/kassisol/hbm/docker/resource"
+	"github.com/kassisol/hbm/internal/image"
 	"github.com/kassisol/hbm/object/types"
 	"github.com/kassisol/hbm/storage"
 	"github.com/kassisol/hbm/storage/driver"

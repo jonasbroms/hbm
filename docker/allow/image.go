@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
-	"github.com/kassisol/hbm/internal/image"
 	"github.com/juliengk/go-utils"
 	"github.com/juliengk/go-utils/json"
 	"github.com/kassisol/hbm/docker/allow/types"
+	"github.com/kassisol/hbm/internal/image"
 	policyobj "github.com/kassisol/hbm/object/policy"
 	objtypes "github.com/kassisol/hbm/object/types"
 	"github.com/kassisol/hbm/version"
