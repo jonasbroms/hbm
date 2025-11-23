@@ -1,6 +1,6 @@
 # HBM
 
-.PHONY: all build clean release test vendor format lint shellcheck dockerlint help
+.PHONY: all build clean test vendor format lint shellcheck dockerlint help
 
 # Default target
 all: build
@@ -15,10 +15,6 @@ clean:
 	rm -rf bin/ dist/
 	rm -f hbm hbm-test
 	find . -name '*.test' -delete
-
-# Create GitHub release
-release:
-	@./scripts/release
 
 # Run tests
 test:
