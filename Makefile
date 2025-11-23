@@ -31,6 +31,8 @@ vendor:
 	go mod vendor
 	@echo "Cleaning"
 	go mod tidy
+	@echo "Verify"
+	go mod verify
 
 # Format Go code
 format:
