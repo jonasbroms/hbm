@@ -2,6 +2,8 @@ package command
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/jonasbroms/hbm/cli/command/commands"
 	"github.com/juliengk/go-utils/user"
@@ -44,8 +46,12 @@ func NewHBMCommand() *cobra.Command {
 		Short: "HBM is an application to authorize and manage authorized docker commands",
 		Long:  "HBM is an application to authorize and manage authorized docker commands",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			// Allow help and version commands without root
-			if cmd.Name() == "help" || cmd.Name() == "version" {
+			// Commands that don't require root privileges
+			allowedCommands := []string{"help", "version", "completion"}
+
+			// Check if the top-level command is allowed without root
+			cmdPath := strings.Fields(cmd.CommandPath())
+			if len(cmdPath) > 1 && slices.Contains(allowedCommands, cmdPath[1]) {
 				return nil
 			}
 
