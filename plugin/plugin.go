@@ -68,8 +68,8 @@ func (p *plugin) iscreatecontainer(req authorization.Request, u *url.URL) bool {
 	if req.ResponseStatusCode != 201 {
 		return false
 	}
-	//fmt.Println("is url:", u)
-	avm := regexp.MustCompile("^/v\\d+\\.\\d+/containers/create")
+
+	avm := regexp.MustCompile(`^/v\d+\.\d+/containers/create`)
 	if avm.MatchString(u.Path) || u.Path == "/containers/create" {
 		return true
 	}
@@ -97,7 +97,9 @@ func (p *plugin) setcontainerowner(cname string, req authorization.Request) erro
 		return err
 	}
 
-	s.SetContainerOwner(username, cname, rjson.Id)
+	if err := s.SetContainerOwner(username, cname, rjson.Id); err != nil {
+		return err
+	}
 
 	// Audit log for container creation
 	slog.Info("Container ownership recorded", "event_type", "container_ownership", "user", username, "container_name", cname, "container_id", rjson.Id)
@@ -106,21 +108,14 @@ func (p *plugin) setcontainerowner(cname string, req authorization.Request) erro
 }
 
 func (p *plugin) AuthZRes(req authorization.Request) authorization.Response {
-	//fmt.Println("resp uri real:", req.RequestURI)
-	//fmt.Println("req body:", string(req.RequestBody))
-	//fmt.Println("resp body:", string(req.ResponseBody))
 	u, err := url.Parse(req.RequestURI)
 	if err != nil {
-		//fmt.Println("parse error:", err)
 		return authorization.Response{Allow: true, Msg: err.Error()}
 	}
-	//fmt.Println(u)
 
 	cname := u.Query().Get("name")
 	if p.iscreatecontainer(req, u) {
-		//fmt.Print("setting owner for", cname)
-		err = p.setcontainerowner(cname, req)
-		//fmt.Println("setcontainterowner err:", err)
+		_ = p.setcontainerowner(cname, req)
 	}
 
 	return authorization.Response{Allow: true}

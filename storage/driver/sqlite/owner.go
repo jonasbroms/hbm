@@ -57,8 +57,5 @@ func (c *Config) IsContainerOwner(username, containerid string) bool {
 		}
 		prfm = true
 	}
-	if prfm {
-		return true
-	}
-	return false
+	return prfm
 }

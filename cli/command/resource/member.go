@@ -42,10 +42,10 @@ func runMember(cmd *cobra.Command, args []string) {
 	defer r.End()
 
 	if resourceMemberAdd {
-		r.AddToCollection(args[1], args[0])
+		_ = r.AddToCollection(args[1], args[0])
 	}
 	if resourceMemberRemove {
-		r.RemoveFromCollection(args[1], args[0])
+		_ = r.RemoveFromCollection(args[1], args[0])
 	}
 }
 

@@ -30,7 +30,9 @@ func (c *Config) ListUsers(filter map[string]string) map[string][]string {
 		var user string
 		var group string
 
-		rows.Scan(&user, &group)
+		if err := rows.Scan(&user, &group); err != nil {
+			continue
+		}
 
 		result[user] = append(result[user], group)
 	}
@@ -43,11 +45,7 @@ func (c *Config) FindUser(name string) bool {
 
 	c.DB.Model(&User{}).Where("name = ?", name).Count(&count)
 
-	if count == 1 {
-		return true
-	}
-
-	return false
+	return count == 1
 }
 
 func (c *Config) CountUser() int {

@@ -30,7 +30,9 @@ func (c *Config) ListGroups(filter map[string]string) map[string][]string {
 		var group string
 		var user string
 
-		rows.Scan(&group, &user)
+		if err := rows.Scan(&group, &user); err != nil {
+			continue
+		}
 
 		result[group] = append(result[group], user)
 	}
@@ -43,11 +45,7 @@ func (c *Config) FindGroup(name string) bool {
 
 	c.DB.Model(&Group{}).Where("name = ?", name).Count(&count)
 
-	if count == 1 {
-		return true
-	}
-
-	return false
+	return count == 1
 }
 
 func (c *Config) CountGroup() int {

@@ -10,7 +10,7 @@ func NewCommand() *cobra.Command {
 		Short: "Manage policies",
 		Long:  policyDescription,
 		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Usage()
+			_ = cmd.Usage()
 		},
 	}
 

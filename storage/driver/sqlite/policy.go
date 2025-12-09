@@ -52,7 +52,9 @@ func (c *Config) ListPolicies(filter map[string]string) []types.Policy {
 		var group string
 		var collection string
 
-		rows.Scan(&policy, &group, &collection)
+		if err := rows.Scan(&policy, &group, &collection); err != nil {
+			continue
+		}
 
 		policies = append(policies, types.Policy{Name: policy, Group: group, Collection: collection})
 	}
@@ -78,7 +80,9 @@ func (c *Config) GetResourceValues(username, rType string) []types.Resource {
 		var rValue string
 		var rOption string
 
-		rows.Scan(&rName, &rType, &rValue, &rOption)
+		if err := rows.Scan(&rName, &rType, &rValue, &rOption); err != nil {
+			continue
+		}
 
 		result = append(result, types.Resource{Name: rName, Type: rType, Value: rValue, Option: rOption})
 	}
@@ -91,11 +95,7 @@ func (c *Config) FindPolicy(name string) bool {
 
 	c.DB.Model(&Policy{}).Where("name = ?", name).Count(&count)
 
-	if count == 1 {
-		return true
-	}
-
-	return false
+	return count == 1
 }
 
 func (c *Config) CountPolicy() int {

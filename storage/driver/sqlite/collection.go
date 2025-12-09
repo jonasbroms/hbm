@@ -30,7 +30,9 @@ func (c *Config) ListCollections(filter map[string]string) map[string][]string {
 		var collection string
 		var resource string
 
-		rows.Scan(&collection, &resource)
+		if err := rows.Scan(&collection, &resource); err != nil {
+			continue
+		}
 
 		result[collection] = append(result[collection], resource)
 	}
@@ -43,11 +45,7 @@ func (c *Config) FindCollection(name string) bool {
 
 	c.DB.Model(&Collection{}).Where("name = ?", name).Count(&count)
 
-	if count == 1 {
-		return true
-	}
-
-	return false
+	return count == 1
 }
 
 func (c *Config) CountCollection() int {

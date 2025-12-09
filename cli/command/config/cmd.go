@@ -10,7 +10,7 @@ func NewCommand() *cobra.Command {
 		Short: "Manage HBM configs",
 		Long:  configDescription,
 		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Usage()
+			_ = cmd.Usage()
 		},
 	}
 

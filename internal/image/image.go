@@ -47,10 +47,10 @@ func (img *Image) String() string {
 	if img.Registry != "" && img.Name != "" {
 		return fmt.Sprintf("%s/%s", img.Registry, img.Name)
 	} else if img.Name != "" {
-		return fmt.Sprintf("%s", img.Name)
+		return img.Name
 	}
 
-	return fmt.Sprintf("%s", img.Name)
+	return img.Name
 }
 
 func GetNameTag(name string) (string, string) {

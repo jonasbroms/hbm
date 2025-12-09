@@ -50,7 +50,9 @@ func (c *Config) ListResources(filter map[string]string) map[types.Resource][]st
 		var resOption string
 		var collection string
 
-		rows.Scan(&resName, &resType, &resValue, &resOption, &collection)
+		if err := rows.Scan(&resName, &resType, &resValue, &resOption, &collection); err != nil {
+			continue
+		}
 
 		rr := types.Resource{Name: resName, Type: resType, Value: resValue, Option: resOption}
 
@@ -65,11 +67,7 @@ func (c *Config) FindResource(name string) bool {
 
 	c.DB.Model(&Resource{}).Where("name = ?", name).Count(&count)
 
-	if count == 1 {
-		return true
-	}
-
-	return false
+	return count == 1
 }
 
 func (c *Config) CountResource(rtype string) int {

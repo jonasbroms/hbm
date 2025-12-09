@@ -35,8 +35,3 @@ func runFind(cmd *cobra.Command, args []string) {
 
 	fmt.Println(p.Find(args[0]))
 }
-
-var findDescription = `
-Verify if policy exists
-
-`

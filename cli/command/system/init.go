@@ -58,8 +58,8 @@ func runInit(cmd *cobra.Command, args []string) {
 	}
 
 	if len(config) == 0 {
-		s.Set("authorization", "false")
-		s.Set("default-allow-action-error", "false")
+		_ = s.Set("authorization", "false")
+		_ = s.Set("default-allow-action-error", "false")
 	}
 
 	g, err := groupobj.New("sqlite", adf.AppPath)
@@ -74,7 +74,7 @@ func runInit(cmd *cobra.Command, args []string) {
 	}
 	groups, _ := g.List(filters)
 	if len(groups) == 0 {
-		g.Add("administrators")
+		_ = g.Add("administrators")
 	}
 
 	r, err := resourceobj.New("sqlite", adf.AppPath)
