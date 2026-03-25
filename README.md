@@ -1,43 +1,46 @@
 # HBM (Harbormaster)
 
-Harbormaster is a basic extendable Docker Engine [access authorization plugin](https://docs.docker.com/engine/extend/plugins_authorization/) that runs on directly on the host.
+HBM is a Docker authorization plugin that controls what Docker commands users are allowed to run. It intercepts every Docker API call and checks it against a configurable whitelist of allowed actions, images, volumes, ports, capabilities, and more.
 
-By default, Harbormaster plugin prevents from executing commands with certain parameters.
+Users are identified by the Common Name (CN) in their TLS client certificate. Access is granted through a role-based model: users belong to groups, groups are assigned policies, policies link to collections of resources.
 
- 1. Docker commands
- 2. Pull images
- 3. Start containers with specific parameters
+## What it blocks by default
 
-* `--privileged`
-* `--ipc=host`
-* `--net=host`
-* `--pid=host`
-* `--userns=host`
-* `--uts=host`
-* any Linux capabilities with parameter `--cap-add=[]`
-* any devices added with parameter `--device=[]`
-* any dns servers added with parameter `--dns`
-* any ports added with parameter `--port`
-* any volumes mounted with parameter `-v`
-* any logging with parameters `--log-driver` and `--log-opt`
-* `--sysctl`
-* `--security-opt`
+Without explicit policy, the following are always denied:
 
-## Versions
+- `--privileged`
+- `--ipc=host`, `--net=host`, `--pid=host`, `--userns=host`, `--uts=host`
+- `--cap-add` (any capability)
+- `--device`
+- `--dns`
+- Port bindings (`-p`)
+- Volume mounts (`-v`)
+- `--log-driver` and `--log-opt`
+- `--sysctl`, `--security-opt`
+- Pulling images not on the whitelist
 
-Supported Docker versions with HBM.
+## Documentation
+
+See the [docs/](docs/) directory:
+
+- [How it works](docs/how-it-works.md)
+- [Installation](docs/installation.md)
+- [Getting started](docs/getting-started.md)
+- [Security](docs/security.md)
+- [CLI reference](docs/reference/cli.md)
+
+## Supported versions
 
 | HBM Version | Docker Version | Docker API |
 |-------------|----------------|------------|
 | 0.19.x      | 27.x           | 1.47       |
 
-## Open Source Licenses
+## Dependencies
 
-We depend on the many great open source licenses, listed below:
-
-* [Docker](https://github.com/docker/docker) by Docker. View [License](https://github.com/moby/moby/blob/master/LICENSE)
-* [Docker plugins helpers](https://github.com/docker/go-plugins-helpers) by Docker. View [License](https://github.com/docker/go-plugins-helpers/blob/master/LICENSE)
-* [Gorm](https://github.com/jinzhu/gorm) by Jinzhu. View [License](https://github.com/jinzhu/gorm/blob/master/License)
-* [Cobra](https://github.com/spf13/cobra) by Steve Francia. View [License](https://github.com/spf13/cobra/blob/main/LICENSE.txt)
-* [go-utils](https://github.com/jonasbroms/go-utils) (forked from juli3nk/go-utils)
-* [go-mount](https://github.com/kassisol/go-mount) by juli3nk
+- [docker/docker](https://github.com/docker/docker) — Docker client and API types
+- [docker/go-connections](https://github.com/docker/go-connections) — Docker network helpers
+- [docker/go-plugins-helpers](https://github.com/docker/go-plugins-helpers) — Docker authorization plugin framework
+- [jinzhu/gorm](https://github.com/jinzhu/gorm) + [mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) — ORM and SQLite driver
+- [spf13/cobra](https://github.com/spf13/cobra) — CLI framework
+- [go-utils](https://github.com/jonasbroms/go-utils) (forked from [juliengk/go-utils](https://github.com/juliengk/go-utils))
+- [go-mount](https://github.com/kassisol/go-mount) (forked from [juliengk/go-mount](https://github.com/juliengk/go-mount))
