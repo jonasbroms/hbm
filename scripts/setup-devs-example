@@ -1,0 +1,53 @@
+#!/bin/sh
+# Sets up a minimal HBM configuration allowing the 'devs' group to run containers.
+# Run this as root after 'hbm init'.
+
+set -e
+
+USERNAME=${1:-}
+
+if [ -z "$USERNAME" ]; then
+    echo "Usage: $0 <username>"
+    echo "  Creates user, adds to 'devs' group, and sets up a basic policy."
+    exit 1
+fi
+
+# User and group
+hbm user add "$USERNAME"
+hbm group add devs 2>/dev/null || true
+hbm user member devs "$USERNAME" --add
+
+# Resources
+hbm resource add devs-action-pull        -t action -v image_create
+hbm resource add devs-action-images      -t action -v image_list
+hbm resource add devs-action-run         -t action -v container_create
+hbm resource add devs-action-start       -t action -v container_start
+hbm resource add devs-action-stop        -t action -v container_stop
+hbm resource add devs-action-rm          -t action -v container_remove
+hbm resource add devs-action-ps          -t action -v container_list
+hbm resource add devs-action-logs        -t action -v container_logs
+hbm resource add devs-image-alpine       -t image   -v alpine
+hbm resource add devs-image-nginx        -t image   -v nginx
+
+# Collection
+hbm collection add devs-collection
+
+hbm resource member devs-collection devs-action-pull   --add
+hbm resource member devs-collection devs-action-images --add
+hbm resource member devs-collection devs-action-run    --add
+hbm resource member devs-collection devs-action-start  --add
+hbm resource member devs-collection devs-action-stop   --add
+hbm resource member devs-collection devs-action-rm     --add
+hbm resource member devs-collection devs-action-ps     --add
+hbm resource member devs-collection devs-action-logs   --add
+hbm resource member devs-collection devs-image-alpine  --add
+hbm resource member devs-collection devs-image-nginx   --add
+
+# Policy
+hbm policy add devs-policy -g devs -c devs-collection
+
+echo ""
+echo "Done. '$USERNAME' is in 'devs' and can now run alpine and nginx containers."
+echo ""
+echo "To enable authorization if not already active:"
+echo "  hbm config set authorization true"

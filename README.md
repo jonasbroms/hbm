@@ -4,9 +4,11 @@ HBM is a Docker authorization plugin that controls what Docker commands users ar
 
 Users are identified by the Common Name (CN) in their TLS client certificate. Access is granted through a role-based model: users belong to groups, groups are assigned policies, policies link to collections of resources.
 
-## What it blocks by default
+## How access control works
 
-Without explicit policy, the following are always denied:
+Authorization is **disabled by default**. After running `hbm init`, all Docker commands are permitted until you explicitly enable enforcement with `hbm config set authorization true`.
+
+Once enabled, HBM operates as a whitelist — everything is denied unless explicitly allowed by policy. Without a matching policy, the following are among the things that will be blocked:
 
 - `--privileged`
 - `--ipc=host`, `--net=host`, `--pid=host`, `--userns=host`, `--uts=host`
