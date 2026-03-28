@@ -3,15 +3,14 @@ package allow
 import (
 	"fmt"
 	"log/slog"
-	"net"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/go-connections/nat"
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/moby/moby/api/types/container"
+	"github.com/moby/moby/api/types/network"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	objtypes "github.com/jonasbroms/hbm/object/types"
@@ -108,12 +107,11 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 			for _, pb := range pbs {
 				spb := GetPortBindingString(&pb)
 
-				cps := cp.Port()
 				var fp string
 				if spb != "" {
 					fp = spb
 				} else {
-					fp = cps
+					fp = fmt.Sprintf("%d", cp.Num())
 				}
 				if !p.Validate(config.Username, "port", fp, "") {
 					return &types.AllowResult{
@@ -159,13 +157,14 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 
 	if len(cc.HostConfig.DNS) > 0 {
 		for _, dns := range cc.HostConfig.DNS {
-			if !p.Validate(config.Username, "dns", dns, "") {
+			dnsStr := dns.String()
+			if !p.Validate(config.Username, "dns", dnsStr, "") {
 				return &types.AllowResult{
 					Allow: false,
 					Msg: map[string]string{
-						"text":           fmt.Sprintf("DNS server %s is not allowed", dns),
+						"text":           fmt.Sprintf("DNS server %s is not allowed", dnsStr),
 						"resource_type":  "dns",
-						"resource_value": dns,
+						"resource_value": dnsStr,
 					},
 				}
 			}
@@ -402,15 +401,10 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 	return &types.AllowResult{Allow: true}
 }
 
-func ipisany(ipstr string) bool {
-	ip := net.ParseIP(ipstr)
-	return ip.IsUnspecified()
-}
-
-func GetPortBindingString(pb *nat.PortBinding) string {
+func GetPortBindingString(pb *network.PortBinding) string {
 	result := pb.HostPort
 
-	if len(pb.HostIP) > 0 && !ipisany(pb.HostIP) {
+	if pb.HostIP.IsValid() && !pb.HostIP.IsUnspecified() {
 		result = fmt.Sprintf("%s:%s", pb.HostIP, pb.HostPort)
 	}
 

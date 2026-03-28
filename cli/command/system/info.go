@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/docker/docker/client"
 	collectionobj "github.com/jonasbroms/hbm/object/collection"
 	configobj "github.com/jonasbroms/hbm/object/config"
 	groupobj "github.com/jonasbroms/hbm/object/group"
@@ -16,6 +15,7 @@ import (
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/jonasbroms/hbm/version"
 	"github.com/juliengk/go-utils"
+	"github.com/moby/moby/client"
 	"github.com/spf13/cobra"
 )
 
@@ -104,17 +104,17 @@ func runInfo(cmd *cobra.Command, args []string) {
 }
 
 func pluginEnabled() bool {
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+	cli, err := client.New(client.FromEnv)
 	if err != nil {
 		return false
 	}
 
-	info, err := cli.Info(context.Background())
+	result, err := cli.Info(context.Background(), client.InfoOptions{})
 	if err != nil {
 		return false
 	}
 
-	for _, p := range info.Plugins.Authorization {
+	for _, p := range result.Info.Plugins.Authorization {
 
 		if p == "hbm" {
 			return true

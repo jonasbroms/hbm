@@ -35,14 +35,14 @@ See the [docs/](docs/) directory:
 
 | HBM Version | Docker Version | Docker API |
 |-------------|----------------|------------|
-| 0.19.x      | 27.x           | 1.47       |
+| 0.19.x      | 28.x           | 1.54       |
 
 ## Dependencies
 
-- [docker/docker](https://github.com/docker/docker) — Docker client and API types
-- [docker/go-connections](https://github.com/docker/go-connections) — Docker network helpers
 - [docker/go-plugins-helpers](https://github.com/docker/go-plugins-helpers) — Docker authorization plugin framework
-- [jinzhu/gorm](https://github.com/jinzhu/gorm) + [mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) — ORM and SQLite driver
-- [spf13/cobra](https://github.com/spf13/cobra) — CLI framework
-- [go-utils](https://github.com/jonasbroms/go-utils) (forked from [juliengk/go-utils](https://github.com/juliengk/go-utils))
 - [go-mount](https://github.com/kassisol/go-mount) (forked from [juliengk/go-mount](https://github.com/juliengk/go-mount))
+- [go-utils](https://github.com/jonasbroms/go-utils) (forked from [juliengk/go-utils](https://github.com/juliengk/go-utils))
+- [jinzhu/gorm](https://github.com/jinzhu/gorm) + [mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) — ORM and SQLite driver
+- [moby/moby/api](https://github.com/moby/moby/tree/master/api) — Docker API types
+- [moby/moby/client](https://github.com/moby/moby/tree/master/client) — Docker client
+- [spf13/cobra](https://github.com/spf13/cobra) — CLI framework

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/moby/moby/api/types/swarm"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"

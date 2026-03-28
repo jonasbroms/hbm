@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/go-plugins-helpers/authorization"
+	"github.com/moby/moby/api/types/volume"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"
@@ -15,7 +15,7 @@ import (
 )
 
 func VolumeCreate(req authorization.Request, config *types.Config) *types.AllowResult {
-	vol := &volume.CreateOptions{}
+	vol := &volume.CreateRequest{}
 
 	err := json.Decode(req.RequestBody, vol)
 	if err != nil {
