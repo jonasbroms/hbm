@@ -42,7 +42,7 @@ See the [docs/](docs/) directory:
 - [docker/go-plugins-helpers](https://github.com/docker/go-plugins-helpers) — Docker authorization plugin framework
 - [go-mount](https://github.com/kassisol/go-mount) (forked from [juliengk/go-mount](https://github.com/juliengk/go-mount))
 - [go-utils](https://github.com/jonasbroms/go-utils) (forked from [juliengk/go-utils](https://github.com/juliengk/go-utils))
-- [jinzhu/gorm](https://github.com/jinzhu/gorm) + [mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) — ORM and SQLite driver
+- [jinzhu/gorm](https://github.com/jinzhu/gorm) + [modernc.org/sqlite](https://gitlab.com/cznic/sqlite) — ORM and SQLite driver (pure Go, no CGO required)
 - [moby/moby/api](https://github.com/moby/moby/tree/master/api) — Docker API types
 - [moby/moby/client](https://github.com/moby/moby/tree/master/client) — Docker client
 - [spf13/cobra](https://github.com/spf13/cobra) — CLI framework

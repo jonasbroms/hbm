@@ -59,15 +59,15 @@ Allows mounting a specific path as a bind mount.
 hbm resource add allow-tmp    -t volume -v /tmp
 
 # Allow mounting /data and any subdirectory
-hbm resource add allow-data   -t volume -v /data -o recursive
+hbm resource add allow-data   -t volume -v /data -o recursive=true
 
 # Allow mounting /data with nosuid enforcement
-hbm resource add allow-data   -t volume -v /data -o nosuid
+hbm resource add allow-data   -t volume -v /data -o nosuid=true
 ```
 
 Options:
-- `recursive` — also allows mounting any subdirectory under the given path
-- `nosuid` — only allows the mount if nosuid is set
+- `recursive=true` — also allows mounting any subdirectory under the given path
+- `nosuid=true` — only allows the mount if nosuid is set
 
 ### port
 

@@ -12,7 +12,7 @@
 ```bash
 git clone https://github.com/jonasbroms/hbm.git
 cd hbm
-CGO_ENABLED=1 go build -o hbm .
+go build -o hbm .
 install -m 755 hbm /usr/local/sbin/hbm
 ```
 
