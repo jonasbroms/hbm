@@ -2,3 +2,7 @@ bin/
 dist/
 debug
 hbm
+
+# Integration test cache and run artifacts
+.tests/.cache/
+.tests/runs/
