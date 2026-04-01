@@ -1,6 +1,6 @@
 # HBM
 
-.PHONY: all build clean test vendor format lint shellcheck dockerlint help
+.PHONY: all build clean test vendor format lint shellcheck dockerlint doclint help
 
 # Default target
 all: build
@@ -60,6 +60,11 @@ dockerlint:
 		docker run -i --rm hadolint/hadolint hadolint --ignore DL3018 --ignore DL3013 - < "$$file" || true; \
 	done
 
+# Lint Markdown documentation
+doclint:
+	@echo "Linting Markdown docs..."
+	docker run --rm -v "$$PWD:/workdir:ro" davidanson/markdownlint-cli2 "docs/**/*.md" "*.md"
+
 # Show help
 help:
 	@echo "HBM"
@@ -73,6 +78,7 @@ help:
 	@echo "  make lint        - Run golint"
 	@echo "  make shellcheck  - Lint shell scripts"
 	@echo "  make dockerlint  - Lint Dockerfiles"
+	@echo "  make doclint     - Lint Markdown documentation"
 	@echo "  make help        - Show this help"
 
 .DEFAULT_GOAL := build
