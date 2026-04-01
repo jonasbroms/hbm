@@ -78,10 +78,12 @@ func runInfo(cmd *cobra.Command, args []string) {
 
 	authz, _ := cfg.Get("authorization")
 	daae, _ := cfg.Get("default-allow-action-error")
+	doc, _ := cfg.Get("disable-ownership-check")
 
 	fmt.Println("Features Enabled:")
 	fmt.Println("  Authorization:", authz)
 	fmt.Println("  Default Allow Action On Error:", daae)
+	fmt.Println("  Disable Ownership Check:", doc)
 	fmt.Println("Policies:", p.Count())
 	fmt.Println("Groups:", g.Count())
 	fmt.Println("Users:", u.Count())

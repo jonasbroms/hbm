@@ -20,6 +20,7 @@ hbm config get authorization
 # Set a value
 hbm config set authorization true
 hbm config set default-allow-action-error false
+hbm config set disable-ownership-check false
 ```
 
 ## Cleaning Up Orphaned Records
@@ -28,6 +29,7 @@ When Docker containers are removed outside of normal operation (e.g., Docker dae
 
 ```bash
 systemctl stop hbm
+cp /var/lib/hbm/data.db /var/lib/hbm/data.db.bak
 sqlite3 /var/lib/hbm/data.db "DELETE FROM container_owner WHERE container_id NOT IN (SELECT id FROM containers);"
 systemctl start hbm
 ```
