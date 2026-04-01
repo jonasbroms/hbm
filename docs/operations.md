@@ -50,17 +50,6 @@ cp /var/lib/hbm/data.db.bak /var/lib/hbm/data.db
 systemctl start hbm
 ```
 
-## Database Migration
-
-If you are upgrading from an older version of HBM with a legacy database schema, `hbm init` will detect and migrate the schema automatically. It preserves all existing users, groups, policies, collections, and resources.
-
-To test migration against a specific database file before upgrading:
-
-```bash
-cp /var/lib/hbm/data.db /tmp/test-migrate.db
-HBM_APP_PATH=/tmp/test-migrate hbm init
-```
-
 ## Troubleshooting
 
 ### All Docker commands are denied

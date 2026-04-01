@@ -107,4 +107,4 @@ HBM validates volume paths before checking them against policy:
 | `default-allow-action-error` | `false` | Whether to allow requests when an internal error occurs |
 | `disable-ownership-check` | `false` | Whether container ownership is check |
 
-Both default to `false` (secure). After enabling `authorization`, set `default-allow-action-error` based on your preference for fail-open vs fail-closed behavior on errors.
+All three default to `false` (secure). After enabling `authorization`, set `default-allow-action-error` based on your preference for fail-open vs fail-closed behavior on errors.
