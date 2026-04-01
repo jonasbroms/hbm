@@ -2,6 +2,8 @@
 
 .PHONY: all build clean test vendor format lint shellcheck dockerlint doclint help
 
+DOCKER := $(shell command -v docker 2>/dev/null || command -v podman 2>/dev/null)
+
 # Default target
 all: build
 
@@ -49,7 +51,7 @@ shellcheck:
 	@echo "Linting shell scripts..."
 	@for file in $$(find . -type f -name '*.sh' -not -path "./.git/*" -not -path "./vendor/*"); do \
 		echo "Checking: $$file"; \
-		docker run --rm -v "$$PWD:/mnt:ro" koalaman/shellcheck -e SC2086 -e SC2046 -e SC1090 "$$file" || true; \
+		$(DOCKER) run --rm -v "$$PWD:/mnt:ro" koalaman/shellcheck -e SC2086 -e SC2046 -e SC1090 "$$file" || true; \
 	done
 
 # Lint Dockerfiles
@@ -57,13 +59,13 @@ dockerlint:
 	@echo "Linting Dockerfiles..."
 	@for file in $$(find . -name 'Dockerfile*' -not -name '*.dapper'); do \
 		echo "Checking: $$file"; \
-		docker run -i --rm hadolint/hadolint hadolint --ignore DL3018 --ignore DL3013 - < "$$file" || true; \
+		$(DOCKER) run -i --rm hadolint/hadolint hadolint --ignore DL3018 --ignore DL3013 - < "$$file" || true; \
 	done
 
 # Lint Markdown documentation
 doclint:
 	@echo "Linting Markdown docs..."
-	docker run --rm -v "$$PWD:/workdir:ro" davidanson/markdownlint-cli2 "docs/**/*.md" "*.md"
+	$(DOCKER) run --rm -v "$$PWD:/workdir:ro" davidanson/markdownlint-cli2 "docs/**/*.md" "*.md"
 
 # Show help
 help:
