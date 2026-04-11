@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"database/sql"
 	"os"
 	"path"
 
@@ -8,10 +9,12 @@ import (
 	"github.com/jonasbroms/hbm/storage/driver"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	modsqlite "modernc.org/sqlite"
 )
 
 func init() {
+	// modernc registers as "sqlite"; re-register under "sqlite3" for GORM v1 compatibility
+	sql.Register("sqlite3", &modsqlite.Driver{})
 	storage.RegisterDriver("sqlite", New)
 }
 

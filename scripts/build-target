@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CGO_ENABLED=0
+export CGO_ENABLED=0
 
 OUTPUT=${OUTPUT:-bin/hbm}
 
@@ -14,11 +14,11 @@ fi
 
 CONST="-X github.com/jonasbroms/hbm/version.Version=${VERSION} -X github.com/jonasbroms/hbm/version.GitCommit=${COMMIT} -X github.com/jonasbroms/hbm/version.GitState=${GITSTATE} -X github.com/jonasbroms/hbm/version.BuildDate=$(date +%s)"
 
-LDFLAGS=${LDFLAGS:-"-linkmode external -extldflags -static -s -w"}
+LDFLAGS=${LDFLAGS:-"-s -w"}
 
 cd $(dirname $0)/..
 
-echo "Building ${VERSION} from ${COMMIT} on x86_64"
+echo "Building ${VERSION} from ${COMMIT}"
 
 go build -ldflags "${CONST} ${LDFLAGS}" -o ${OUTPUT}
 strip --strip-all ${OUTPUT}
