@@ -7,8 +7,8 @@ require (
 	github.com/jinzhu/gorm v1.9.17-0.20211120011537-5c235b72a414
 	github.com/juliengk/go-mount v0.0.0-20170406141235-e7123cbaaaf6
 	github.com/juliengk/go-utils v0.0.0-00010101000000-000000000000
-	github.com/moby/moby/api v1.54.0
-	github.com/moby/moby/client v0.3.0
+	github.com/moby/moby/api v1.54.1
+	github.com/moby/moby/client v0.4.0
 	github.com/spf13/cobra v1.10.2
 	modernc.org/sqlite v1.48.2
 )
@@ -30,7 +30,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.1-0.20231016084002-bbe0a3e7399f // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-isatty v0.0.21 // indirect
 	github.com/mattn/go-sqlite3 v1.14.37 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
@@ -40,15 +40,15 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.67.0 // indirect
-	go.opentelemetry.io/otel v1.42.0 // indirect
-	go.opentelemetry.io/otel/metric v1.42.0 // indirect
-	go.opentelemetry.io/otel/trace v1.42.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.68.0 // indirect
+	go.opentelemetry.io/otel v1.43.0 // indirect
+	go.opentelemetry.io/otel/metric v1.43.0 // indirect
+	go.opentelemetry.io/otel/trace v1.43.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.49.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
-	modernc.org/libc v1.70.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
+	modernc.org/libc v1.72.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
