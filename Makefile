@@ -40,6 +40,10 @@ format:
 		gofmt -l -s -w "$$file"; \
 	done
 
+# Build distribution packages for all supported platforms
+packages: build
+	@./scripts/build-packages
+
 # Run golangci-lint
 lint:
 	@echo "Running golangci-lint..."
@@ -77,6 +81,7 @@ help:
 	@echo "  make release     - Create GitHub release"
 	@echo "  make test        - Run Go unit tests"
 	@echo "  make format      - Format Go code with gofmt"
+	@echo "  make packages    - Build RPM/DEB packages for all platforms"
 	@echo "  make lint        - Run golint"
 	@echo "  make shellcheck  - Lint shell scripts"
 	@echo "  make dockerlint  - Lint Dockerfiles"

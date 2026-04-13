@@ -4,16 +4,23 @@ set -e
 ORIGIN=$(pwd)
 BASE="scripts/packages"
 
-source $(dirname $0)/version
+source "$(dirname "$0")/version"
 
-for i in "${BASE}"/*; do
-	echo "build-package: Building ${i}"
+DOCKER=$(command -v docker 2>/dev/null || command -v podman 2>/dev/null || true)
+
+if [ -z "${DOCKER}" ]; then
+	echo "build-packages: docker or podman is required" >&2
+	exit 1
+fi
+
+for i in "${BASE}"/*/; do
+	PLATFORM=$(basename "${i}")
+	echo "build-packages: Building ${PLATFORM}"
 
 	cd "${ORIGIN}/${i}"
 
 	if [ ! -f "Dockerfile" ]; then
-		echo "WARN: Skipping"
-
+		echo "build-packages: WARN: Skipping ${PLATFORM} (no Dockerfile)"
 		continue
 	fi
 
@@ -21,19 +28,23 @@ for i in "${BASE}"/*; do
 		./prebuild.sh
 	fi
 
-	dapper -d -m cp -f Dockerfile -- ${VERSION} ${RELEASE}
-	code=$?
+	IMAGE="hbm-pkg-${PLATFORM}"
+	OUTDIR="${ORIGIN}/dist/${PLATFORM}"
+	mkdir -p "${OUTDIR}"
+
+	"${DOCKER}" build -t "${IMAGE}" .
+
+	"${DOCKER}" run --rm \
+		-v "${OUTDIR}:/tmp/dist" \
+		"${IMAGE}" "${VERSION}" "${RELEASE}"
 
 	if [ -d "build" ]; then
 		rm -rf build
 	fi
 
-	if [ "${code}" != "0" ]; then
-		continue
-	fi
-
-	mv dist/* ${ORIGIN}/dist/
-	rmdir dist
+	"${DOCKER}" rmi "${IMAGE}" >/dev/null 2>&1 || true
 done
 
-echo "build-package: DONE"
+echo "build-packages: DONE"
+echo "build-packages: Packages in ${ORIGIN}/dist/"
+find "${ORIGIN}/dist" -type f | sort

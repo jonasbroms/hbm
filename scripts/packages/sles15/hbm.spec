@@ -6,9 +6,7 @@ Group: Tools/Docker
 
 License: GPLv3+
 
-URL: https://github.com/kassisol/hbm
-Vendor: Kassisol
-Packager: Kassisol <support@kassisol.com>
+URL: https://github.com/jonasbroms/hbm
 
 BuildArch: x86_64
 BuildRoot: %{_tmppath}/%{name}-buildroot

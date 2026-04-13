@@ -1,4 +1,4 @@
-FROM oraclelinux:7.9
+FROM registry.opensuse.org/opensuse/leap:15.6
 
 COPY entrypoint.sh /entrypoint.sh
 COPY build /usr/local/src/hbm
@@ -11,11 +11,10 @@ WORKDIR ${DAPPER_SOURCE}
 
 ENV RPMBUILD_PATH="/srv/rpmbuild"
 
-RUN build="rpm-build" \
-	&& set -x \
-	&& yum -y install $build \
-	&& yum -y autoremove \
-	&& yum clean all
+RUN set -x \
+	&& zypper --non-interactive refresh \
+	&& zypper --non-interactive install rpm-build systemd-rpm-macros \
+	&& zypper clean --all
 
 RUN mkdir -p ${RPMBUILD_PATH} \
 	&& mkdir ${RPMBUILD_PATH}/BUILD \

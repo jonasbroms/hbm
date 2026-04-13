@@ -11,6 +11,7 @@ rpmbuild -ba \
 	--define "_version ${VERSION}" \
 	--define "_release ${RELEASE}" \
 	--define '_unitdir etc/systemd/system' \
+	--define 'dist .sles15' \
 	hbm.spec
 
 mkdir -p /tmp/dist
