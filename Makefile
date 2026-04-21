@@ -78,7 +78,6 @@ help:
 	@echo "Targets:"
 	@echo "  make build       - Build HBM binary with version info"
 	@echo "  make clean       - Remove build artifacts"
-	@echo "  make release     - Create GitHub release"
 	@echo "  make test        - Run Go unit tests"
 	@echo "  make format      - Format Go code with gofmt"
 	@echo "  make packages    - Build RPM/DEB packages for all platforms"
