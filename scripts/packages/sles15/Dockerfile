@@ -3,11 +3,9 @@ FROM registry.opensuse.org/opensuse/leap:15.6
 COPY entrypoint.sh /entrypoint.sh
 COPY build /usr/local/src/hbm
 
-ENV DAPPER_SOURCE /tmp
-ENV DAPPER_OUTPUT dist
 ENV SHELL /bin/bash
 
-WORKDIR ${DAPPER_SOURCE}
+WORKDIR /tmp
 
 ENV RPMBUILD_PATH="/srv/rpmbuild"
 
