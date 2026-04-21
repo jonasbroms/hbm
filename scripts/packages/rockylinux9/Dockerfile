@@ -11,7 +11,7 @@ WORKDIR ${DAPPER_SOURCE}
 
 ENV RPMBUILD_PATH="/srv/rpmbuild"
 
-RUN build="rpm-build" \
+RUN build="rpm-build systemd-rpm-macros" \
 	&& set -x \
 	&& yum -y install $build \
 	&& yum -y autoremove \
