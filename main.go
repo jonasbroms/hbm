@@ -18,12 +18,23 @@
 package main
 
 import (
+	"log/slog"
 	"os"
+	"time"
 
 	"github.com/jonasbroms/hbm/cli/command"
 )
 
 func main() {
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.TimeKey {
+				return slog.String(slog.TimeKey, a.Value.Time().Format(time.RFC3339))
+			}
+			return a
+		},
+	})))
+
 	cmd := command.NewHBMCommand()
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
