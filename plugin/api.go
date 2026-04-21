@@ -61,7 +61,8 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 
 	// Authentication
 	username := req.User
-	if len(username) == 0 {
+	internal := len(username) == 0
+	if internal {
 		username = "root"
 	}
 
@@ -104,6 +105,7 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 			"event_type", "docker_authorization",
 			"user", username,
 			"is_admin", isAdmin,
+			"internal", internal,
 			"allowed", r.Allow,
 			"authorization", aR,
 			"action", u.Action,
@@ -135,6 +137,7 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 			"event_type", "docker_authorization",
 			"user", username,
 			"is_admin", isAdmin,
+			"internal", internal,
 			"allowed", r.Allow,
 			"authorization", aR,
 			"action", u.Action,
