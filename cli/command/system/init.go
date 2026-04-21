@@ -68,7 +68,10 @@ func runInit(cmd *cobra.Command, args []string) {
 	}
 	for key, val := range configDefaults {
 		if !existing[key] {
-			s.Set(key, val)
+			if err := s.Set(key, val); err != nil {
+				slog.Error("Failed to set config default", "key", key, "error", err)
+				os.Exit(1)
+			}
 		}
 	}
 
