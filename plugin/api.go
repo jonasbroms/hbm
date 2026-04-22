@@ -3,6 +3,7 @@ package plugin
 import (
 	"log/slog"
 	"runtime/debug"
+	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
 	"github.com/jonasbroms/hbm/docker/allow"
@@ -60,8 +61,9 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 
 	// Authentication
 	username := req.User
-	internal := len(username) == 0
-	if internal {
+	isDockerCLI := strings.HasPrefix(req.RequestHeaders["User-Agent"], "Docker-Client/")
+	internal := len(username) == 0 && !isDockerCLI
+	if len(username) == 0 {
 		username = "root"
 	}
 
