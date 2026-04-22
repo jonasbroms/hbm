@@ -48,6 +48,9 @@ install -p -m 644 man/man8/*.8 $RPM_BUILD_ROOT/%{_mandir}/man8/
 %post
 %systemd_post hbm.service
 %systemd_post hbm.socket
+if [ $1 -eq 2 ]; then
+    systemctl try-restart hbm.service >/dev/null 2>&1 || :
+fi
 
 %preun
 %systemd_preun hbm.service
