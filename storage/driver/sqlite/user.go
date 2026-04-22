@@ -1,5 +1,7 @@
 package sqlite
 
+import "database/sql"
+
 func (c *Config) AddUser(name string) {
 	c.DB.Create(&User{Name: name})
 }
@@ -13,28 +15,33 @@ func (c *Config) RemoveUser(name string) error {
 func (c *Config) ListUsers(filter map[string]string) map[string][]string {
 	result := make(map[string][]string)
 
-	sql := c.DB.Table("users").Select("users.name, groups.name").Joins("LEFT JOIN group_users ON group_users.user_id = users.id").Joins("LEFT JOIN groups ON groups.id = group_users.group_id")
+	q := c.DB.Table("users").Select("users.name, groups.name").Joins("LEFT JOIN group_users ON group_users.user_id = users.id").Joins("LEFT JOIN groups ON groups.id = group_users.group_id")
 
 	if v, ok := filter["name"]; ok {
-		sql = sql.Where("users.name = ?", v)
+		q = q.Where("users.name = ?", v)
 	}
 
 	if v, ok := filter["elem"]; ok {
-		sql = sql.Where("groups.name = ?", v)
+		q = q.Where("groups.name = ?", v)
 	}
 
-	rows, _ := sql.Rows()
+	rows, _ := q.Rows()
 	defer rows.Close()
 
 	for rows.Next() {
 		var user string
-		var group string
+		var group sql.NullString
 
 		if err := rows.Scan(&user, &group); err != nil {
 			continue
 		}
 
-		result[user] = append(result[user], group)
+		if _, ok := result[user]; !ok {
+			result[user] = []string{}
+		}
+		if group.Valid {
+			result[user] = append(result[user], group.String)
+		}
 	}
 
 	return result

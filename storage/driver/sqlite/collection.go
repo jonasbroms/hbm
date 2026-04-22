@@ -1,5 +1,7 @@
 package sqlite
 
+import "database/sql"
+
 func (c *Config) AddCollection(name string) {
 	c.DB.Create(&Collection{Name: name})
 }
@@ -13,28 +15,33 @@ func (c *Config) RemoveCollection(name string) error {
 func (c *Config) ListCollections(filter map[string]string) map[string][]string {
 	result := make(map[string][]string)
 
-	sql := c.DB.Table("collections").Select("collections.name, resources.name").Joins("LEFT JOIN collection_resources ON collection_resources.collection_id = collections.id").Joins("LEFT JOIN resources ON resources.id = collection_resources.resource_id")
+	q := c.DB.Table("collections").Select("collections.name, resources.name").Joins("LEFT JOIN collection_resources ON collection_resources.collection_id = collections.id").Joins("LEFT JOIN resources ON resources.id = collection_resources.resource_id")
 
 	if v, ok := filter["name"]; ok {
-		sql = sql.Where("collections.name = ?", v)
+		q = q.Where("collections.name = ?", v)
 	}
 
 	if v, ok := filter["elem"]; ok {
-		sql = sql.Where("resources.name = ?", v)
+		q = q.Where("resources.name = ?", v)
 	}
 
-	rows, _ := sql.Rows()
+	rows, _ := q.Rows()
 	defer rows.Close()
 
 	for rows.Next() {
 		var collection string
-		var resource string
+		var resource sql.NullString
 
 		if err := rows.Scan(&collection, &resource); err != nil {
 			continue
 		}
 
-		result[collection] = append(result[collection], resource)
+		if _, ok := result[collection]; !ok {
+			result[collection] = []string{}
+		}
+		if resource.Valid {
+			result[collection] = append(result[collection], resource.String)
+		}
 	}
 
 	return result

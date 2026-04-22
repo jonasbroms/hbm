@@ -1,6 +1,8 @@
 package sqlite
 
 import (
+	"database/sql"
+
 	"github.com/jonasbroms/hbm/object/types"
 )
 
@@ -22,25 +24,25 @@ func (c *Config) RemoveResource(name string) error {
 func (c *Config) ListResources(filter map[string]string) map[types.Resource][]string {
 	result := make(map[types.Resource][]string)
 
-	sql := c.DB.Table("resources").Select("resources.name, resources.type, resources.value, resources.option, collections.name").Joins("LEFT JOIN collection_resources ON collection_resources.resource_id = resources.id").Joins("LEFT JOIN collections ON collections.id = collection_resources.collection_id")
+	q := c.DB.Table("resources").Select("resources.name, resources.type, resources.value, resources.option, collections.name").Joins("LEFT JOIN collection_resources ON collection_resources.resource_id = resources.id").Joins("LEFT JOIN collections ON collections.id = collection_resources.collection_id")
 
 	if v, ok := filter["name"]; ok {
-		sql = sql.Where("resources.name = ?", v)
+		q = q.Where("resources.name = ?", v)
 	}
 
 	if v, ok := filter["type"]; ok {
-		sql = sql.Where("resources.type = ?", v)
+		q = q.Where("resources.type = ?", v)
 	}
 
 	if v, ok := filter["value"]; ok {
-		sql = sql.Where("resources.value = ?", v)
+		q = q.Where("resources.value = ?", v)
 	}
 
 	if v, ok := filter["elem"]; ok {
-		sql = sql.Where("collections.name = ?", v)
+		q = q.Where("collections.name = ?", v)
 	}
 
-	rows, _ := sql.Rows()
+	rows, _ := q.Rows()
 	defer rows.Close()
 
 	for rows.Next() {
@@ -48,7 +50,7 @@ func (c *Config) ListResources(filter map[string]string) map[types.Resource][]st
 		var resType string
 		var resValue string
 		var resOption string
-		var collection string
+		var collection sql.NullString
 
 		if err := rows.Scan(&resName, &resType, &resValue, &resOption, &collection); err != nil {
 			continue
@@ -56,7 +58,12 @@ func (c *Config) ListResources(filter map[string]string) map[types.Resource][]st
 
 		rr := types.Resource{Name: resName, Type: resType, Value: resValue, Option: resOption}
 
-		result[rr] = append(result[rr], collection)
+		if _, ok := result[rr]; !ok {
+			result[rr] = []string{}
+		}
+		if collection.Valid {
+			result[rr] = append(result[rr], collection.String)
+		}
 	}
 
 	return result
