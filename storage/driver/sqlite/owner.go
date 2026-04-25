@@ -17,7 +17,7 @@ func (c *Config) SetContainerOwner(username, name, containerid string) error {
 		User:        user,
 	}
 	c.DB.Model(&ContainerOwner{}).Create(&co)
-	if len(name) > 1 {
+	if len(name) > 0 { // Docker container names are always > 1 chars
 		con := ContainerOwner{
 			ContainerID: fmt.Sprintf("name:%s", name),
 			User:        user,
