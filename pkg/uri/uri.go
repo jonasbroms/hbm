@@ -1,6 +1,7 @@
 package uri
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -35,7 +36,7 @@ func (uris *URIs) GetURI(method, url string) (URI, error) {
 		}
 	}
 
-	return URI{}, nil
+	return URI{}, fmt.Errorf("unknown endpoint: %s %s", method, url)
 }
 
 func (uris *URIs) ActionExists(action string) bool {

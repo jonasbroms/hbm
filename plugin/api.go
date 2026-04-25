@@ -81,6 +81,16 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 
 	u, err := a.Uris.GetURI(req.RequestMethod, a.URIInfo.Path)
 	if err != nil {
+		slog.Warn("Authorization denied",
+			"event_type", "docker_authorization",
+			"user", username,
+			"is_admin", isAdmin,
+			"internal", internal,
+			"allowed", false,
+			"request_method", req.RequestMethod,
+			"request_uri", req.RequestURI,
+			"denial_reason", err.Error(),
+		)
 		return &types.AllowResult{Allow: false, Error: err.Error()}
 	}
 
