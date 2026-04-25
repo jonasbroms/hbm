@@ -51,7 +51,8 @@ type Policy struct {
 
 type ContainerOwner struct {
 	Model
-	User        User
-	UserID      uint
-	ContainerID string `gorm:"unique;"`
+	User          User
+	UserID        uint
+	ContainerID   string `gorm:"index"`  // full 64-char Docker ID
+	ContainerName string `gorm:"index"`  // name without leading slash
 }

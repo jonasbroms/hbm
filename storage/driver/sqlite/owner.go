@@ -6,56 +6,62 @@ import (
 
 func (c *Config) SetContainerOwner(username, name, containerid string) error {
 	var user User
-
 	c.DB.Where("name = ?", username).First(&user)
 	if user.ID == 0 {
-		return nil //FIXME
+		return fmt.Errorf("user %q not found", username)
 	}
 
 	co := ContainerOwner{
-		ContainerID: containerid,
-		User:        user,
+		ContainerID:   containerid,
+		ContainerName: name,
+		User:          user,
 	}
-	c.DB.Model(&ContainerOwner{}).Create(&co)
-	if len(name) > 0 { // Docker container names are always > 1 chars
-		con := ContainerOwner{
-			ContainerID: fmt.Sprintf("name:%s", name),
-			User:        user,
-		}
-		c.DB.Model(&ContainerOwner{}).Create(&con)
-	}
-
-	return nil
+	return c.DB.Create(&co).Error
 }
 
 func (c *Config) IsContainerOwner(username, containerid string) bool {
-	var co ContainerOwner
 	var u User
-	var cnt int
-
 	c.DB.Where("name = ?", username).First(&u)
 	if u.ID == 0 {
 		return false
 	}
 
-	name := fmt.Sprintf("name:%s", containerid)
-	c.DB.Model(&co).Where("container_id = ? AND user_id = ?", name, u.ID).Count(&cnt)
-	if cnt == 1 {
+	var count int
+
+	// Match by container name (docker inspect/start/stop by name)
+	c.DB.Model(&ContainerOwner{}).
+		Where("container_name = ? AND user_id = ?", containerid, u.ID).
+		Count(&count)
+	if count > 0 {
 		return true
 	}
-	c.DB.Model(&co).Where("container_id = ? AND user_id = ?", containerid, u.ID).Count(&cnt)
-	if cnt == 1 {
-		return true
+
+	// Match by full ID or short-ID prefix.
+	// user_id is in the WHERE clause so a prefix shared with another user's
+	// container never produces a false negative (fixes the old inverted LIKE bug).
+	prefix := containerid + "%"
+	c.DB.Model(&ContainerOwner{}).
+		Where("container_id LIKE ? AND user_id = ?", prefix, u.ID).
+		Count(&count)
+	return count > 0
+}
+
+func (c *Config) RemoveContainerOwner(containerid string) error {
+	return c.DB.Where("container_id = ?", containerid).Delete(&ContainerOwner{}).Error
+}
+
+func (c *Config) BackfillContainerName(containerID, name string) error {
+	return c.DB.Model(&ContainerOwner{}).
+		Where("container_id = ? AND (container_name IS NULL OR container_name = ?)", containerID, "").
+		Update("container_name", name).Error
+}
+
+func (c *Config) ListContainerOwnerIDs() []string {
+	var owners []ContainerOwner
+	c.DB.Select("container_id").Find(&owners)
+	ids := make([]string, 0, len(owners))
+	for _, o := range owners {
+		ids = append(ids, o.ContainerID)
 	}
-	prefix := fmt.Sprintf("%s%%", containerid)
-	prfm := false
-	var cop []ContainerOwner
-	c.DB.Where("container_id LIKE ?", prefix).Find(&cop)
-	for _, p := range cop {
-		if p.UserID != u.ID {
-			return false
-		}
-		prfm = true
-	}
-	return prfm
+	return ids
 }

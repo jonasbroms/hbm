@@ -59,6 +59,10 @@ func New(config string) (driver.Storager, error) {
 
 	db.AutoMigrate(&AppConfig{}, &User{}, &Group{}, &Resource{}, &Collection{}, &Policy{}, &ContainerOwner{})
 
+	// Remove legacy "name:foo" supplementary rows from old schema.
+	// New schema stores name in ContainerName; one row per container suffices.
+	db.Exec("DELETE FROM container_owners WHERE container_id LIKE 'name:%'")
+
 	dbInstances[file] = db
 	return &Config{DB: db}, nil
 }
