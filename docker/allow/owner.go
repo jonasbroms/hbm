@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -21,7 +20,7 @@ func ContainerOwner(req authorization.Request, config *types.Config) *types.Allo
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer p.End()
 

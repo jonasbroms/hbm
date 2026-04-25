@@ -3,7 +3,6 @@ package allow
 import (
 	"fmt"
 	"log/slog"
-	"os"
 
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
@@ -17,7 +16,7 @@ func Action(config *types.Config, action, cmd string) *types.AllowResult {
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer p.End()
 

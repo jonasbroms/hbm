@@ -3,7 +3,6 @@ package allow
 import (
 	"fmt"
 	"log/slog"
-	"os"
 
 	"encoding/json"
 
@@ -27,7 +26,7 @@ func VolumeCreate(req authorization.Request, config *types.Config) *types.AllowR
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer p.End()
 

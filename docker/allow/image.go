@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
-	"os"
 	"path"
 	"strings"
 
@@ -54,7 +53,7 @@ func AllowImage(img string, config *types.Config) bool {
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return false
 	}
 	defer p.End()
 

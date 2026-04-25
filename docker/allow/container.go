@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
-	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -38,7 +37,7 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer p.End()
 
@@ -420,7 +419,7 @@ func AllowVolume(vol string, config *types.Config) (bool, string) {
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
 		slog.Error("Failed to create policy object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return false, "internal error: database unavailable"
 	}
 	defer p.End()
 

@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"log/slog"
-	"os"
 	"runtime/debug"
 
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -31,14 +30,14 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 	s, err := configobj.New("sqlite", a.AppPath)
 	if err != nil {
 		slog.Error("Failed to create config object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer s.End()
 
 	g, err := groupobj.New("sqlite", a.AppPath)
 	if err != nil {
 		slog.Error("Failed to create group object", "version", version.Version, "error", err)
-		os.Exit(1)
+		return &types.AllowResult{Allow: false, Error: "internal error: database unavailable"}
 	}
 	defer g.End()
 
@@ -93,10 +92,14 @@ func (a *Api) Allow(req authorization.Request) (ar *types.AllowResult) {
 	if !isAdmin {
 		if aR {
 			r = allow.Action(&config, u.Action, u.CmdName)
-			if r.Allow {
+			if r != nil && r.Allow {
 				r = u.AllowFunc(req, &config)
 			}
 		}
+	}
+
+	if r == nil {
+		r = &types.AllowResult{Allow: false, Error: "internal error: unexpected nil result"}
 	}
 
 	// Log event with detailed audit information
