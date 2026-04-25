@@ -42,7 +42,10 @@ func (c *Config) ListResources(filter map[string]string) map[types.Resource][]st
 		q = q.Where("collections.name = ?", v)
 	}
 
-	rows, _ := q.Rows()
+	rows, err := q.Rows()
+	if err != nil {
+		return result
+	}
 	defer rows.Close()
 
 	for rows.Next() {

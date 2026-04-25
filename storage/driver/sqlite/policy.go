@@ -44,7 +44,10 @@ func (c *Config) ListPolicies(filter map[string]string) []types.Policy {
 		sql = sql.Where("collections.name = ?", v)
 	}
 
-	rows, _ := sql.Rows()
+	rows, err := sql.Rows()
+	if err != nil {
+		return policies
+	}
 	defer rows.Close()
 
 	for rows.Next() {
@@ -71,7 +74,10 @@ func (c *Config) GetResourceValues(username, rType string) []types.Resource {
 
 	sql = sql.Joins("JOIN collection_resources ON collection_resources.collection_id = collections.id").Joins("JOIN resources ON resources.id = collection_resources.resource_id").Where("resources.type = ?", rType)
 
-	rows, _ := sql.Rows()
+	rows, err := sql.Rows()
+	if err != nil {
+		return result
+	}
 	defer rows.Close()
 
 	for rows.Next() {

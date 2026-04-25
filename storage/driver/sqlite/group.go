@@ -25,7 +25,10 @@ func (c *Config) ListGroups(filter map[string]string) map[string][]string {
 		q = q.Where("users.name = ?", v)
 	}
 
-	rows, _ := q.Rows()
+	rows, err := q.Rows()
+	if err != nil {
+		return result
+	}
 	defer rows.Close()
 
 	for rows.Next() {
