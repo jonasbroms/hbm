@@ -6,7 +6,6 @@ import (
 	"github.com/jonasbroms/hbm/docker/resource"
 	"github.com/jonasbroms/hbm/docker/resource/driver"
 	"github.com/jonasbroms/hbm/pkg/utils"
-	"github.com/juliengk/go-utils/validation"
 )
 
 type Config struct{}
@@ -42,8 +41,8 @@ func (c *Config) Valid(value string) error {
 	}
 
 	for _, p := range ports {
-		if err := validation.IsValidPort(p); err != nil {
-			return err
+		if p < 0 || p > 65535 {
+			return fmt.Errorf("port is not valid")
 		}
 	}
 

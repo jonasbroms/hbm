@@ -5,24 +5,24 @@ import (
 	"log/slog"
 	"os"
 
+	"encoding/json"
+
 	"github.com/docker/go-plugins-helpers/authorization"
 	"github.com/moby/moby/api/types/volume"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-utils"
-	"github.com/juliengk/go-utils/json"
 )
 
 func VolumeCreate(req authorization.Request, config *types.Config) *types.AllowResult {
 	vol := &volume.CreateRequest{}
 
-	err := json.Decode(req.RequestBody, vol)
-	if err != nil {
+	if err := json.Unmarshal(req.RequestBody, vol); err != nil {
 		return &types.AllowResult{Allow: false, Error: err.Error()}
 	}
 
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {

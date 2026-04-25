@@ -9,7 +9,7 @@ import (
 
 	collectionobj "github.com/jonasbroms/hbm/object/collection"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +32,7 @@ func newListCommand() *cobra.Command {
 }
 
 func runList(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	c, err := collectionobj.New("sqlite", adf.AppPath)
 	if err != nil {
@@ -41,7 +41,12 @@ func runList(cmd *cobra.Command, args []string) {
 	}
 	defer c.End()
 
-	filters := utils.ConvertSliceToMap("=", collectionListFilter)
+	filters := make(map[string]string)
+	for _, s := range collectionListFilter {
+		if k, v, ok := strings.Cut(s, "="); ok {
+			filters[k] = v
+		}
+	}
 
 	collections, err := c.List(filters)
 	if err != nil {

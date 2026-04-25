@@ -4,9 +4,8 @@ package image
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
-
-	"github.com/juliengk/go-utils/validation"
 )
 
 type Image struct {
@@ -78,9 +77,29 @@ func validateRegistry(value string) bool {
 
 	result := strings.Split(value, ":")
 
-	if err := validation.IsValidFQDN(result[0]); err == nil {
-		return true
-	}
+	return isValidFQDN(result[0])
+}
 
-	return false
+func isValidFQDN(s string) bool {
+	if len(s) == 0 || len(s) > 254 {
+		return false
+	}
+	parts := strings.Split(s, ".")
+	if len(parts) < 2 {
+		return false
+	}
+	reLabel := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9\-]{1,63}$`)
+	reTLD := regexp.MustCompile(`^[a-zA-Z]{2,63}$`)
+	for i, p := range parts {
+		if i == len(parts)-1 {
+			if !reTLD.MatchString(p) {
+				return false
+			}
+		} else {
+			if !reLabel.MatchString(p) {
+				return false
+			}
+		}
+	}
+	return true
 }

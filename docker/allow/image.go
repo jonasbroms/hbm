@@ -8,14 +8,15 @@ import (
 	"path"
 	"strings"
 
+	"encoding/json"
+
 	"github.com/docker/go-plugins-helpers/authorization"
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	"github.com/jonasbroms/hbm/internal/image"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	objtypes "github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-utils"
-	"github.com/juliengk/go-utils/json"
 )
 
 func ImageCreate(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -48,7 +49,7 @@ func ImageCreate(req authorization.Request, config *types.Config) *types.AllowRe
 }
 
 func AllowImage(img string, config *types.Config) bool {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
@@ -75,9 +76,8 @@ func AllowImage(img string, config *types.Config) bool {
 		return true
 	}
 
-	io := &objtypes.ImageOptions{SubImages: true}
-	jio := json.Encode(io)
-	opts := strings.TrimSpace(jio.String())
+	jioBytes, _ := json.Marshal(&objtypes.ImageOptions{SubImages: true})
+	opts := strings.TrimSpace(string(jioBytes))
 
 	dir, _ := path.Split(i.String())
 	if len(dir) > 0 && p.Validate(config.Username, "image", dir, opts) {

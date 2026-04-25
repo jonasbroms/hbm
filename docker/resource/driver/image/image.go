@@ -2,10 +2,10 @@ package image
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/jonasbroms/hbm/docker/resource"
 	"github.com/jonasbroms/hbm/docker/resource/driver"
-	"github.com/juliengk/go-utils"
 )
 
 type Config struct {
@@ -33,7 +33,7 @@ func (c *Config) Valid(value string) error {
 func (c *Config) ValidOptions(options map[string]string) error {
 
 	for k := range options {
-		if !utils.StringInSlice(k, c.Options, false) {
+		if !slices.Contains(c.Options, k) {
 			return fmt.Errorf("%s is not a valid option key", k)
 		}
 	}

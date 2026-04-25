@@ -6,7 +6,7 @@ import (
 
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +32,7 @@ func newAddCommand() *cobra.Command {
 }
 
 func runAdd(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", adf.AppPath)
 	if err != nil {

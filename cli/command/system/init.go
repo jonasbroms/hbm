@@ -3,7 +3,6 @@ package system
 import (
 	"log/slog"
 	"os"
-	"reflect"
 
 	"github.com/jonasbroms/hbm/docker/endpoint"
 	resourcepkg "github.com/jonasbroms/hbm/docker/resource"
@@ -12,8 +11,6 @@ import (
 	groupobj "github.com/jonasbroms/hbm/object/group"
 	resourceobj "github.com/jonasbroms/hbm/object/resource"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
-	"github.com/juliengk/go-utils/filedir"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +36,7 @@ func NewInitCommand() *cobra.Command {
 }
 
 func runInit(cmd *cobra.Command, args []string) {
-	if err := filedir.CreateDirIfNotExist(adf.AppPath, false, 0700); err != nil {
+	if err := os.MkdirAll(adf.AppPath, 0700); err != nil {
 		slog.Error("Failed to create application directory", "error", err)
 		os.Exit(1)
 	}
@@ -115,8 +112,7 @@ func runInit(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		val := utils.GetReflectValue(reflect.Slice, res.List())
-		v := val.Interface().([]rconfigdrv.Action)
+		v := res.List().([]rconfigdrv.Action)
 
 		for _, c := range v {
 			if !r.Find(c.Key) {

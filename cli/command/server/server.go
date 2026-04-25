@@ -12,7 +12,6 @@ import (
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/jonasbroms/hbm/plugin"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-utils/filedir"
 	"github.com/spf13/cobra"
 )
 
@@ -39,12 +38,12 @@ func serverInitConfig() {
 		os.Exit(1)
 	}
 
-	if err := filedir.CreateDirIfNotExist(dockerPluginPath, false, 0755); err != nil {
+	if err := os.MkdirAll(dockerPluginPath, 0755); err != nil {
 		slog.Error("Failed to create plugin directory", "error", err)
 		os.Exit(1)
 	}
 
-	if !filedir.FileExists(dockerPluginFile) {
+	if _, err := os.Lstat(dockerPluginFile); err != nil {
 		err := os.WriteFile(dockerPluginFile, pluginSpecContent, 0644)
 		if err != nil {
 			slog.Error("Failed to write plugin spec file", "error", err)

@@ -5,8 +5,6 @@ go 1.26.1
 require (
 	github.com/docker/go-plugins-helpers v0.0.0-20240701071450-45e2431495c8
 	github.com/jinzhu/gorm v1.9.17-0.20211120011537-5c235b72a414
-	github.com/juliengk/go-mount v0.0.0-20170406141235-e7123cbaaaf6
-	github.com/juliengk/go-utils v0.0.0-00010101000000-000000000000
 	github.com/moby/moby/api v1.54.2
 	github.com/moby/moby/client v0.4.1
 	github.com/spf13/cobra v1.10.2
@@ -53,6 +51,3 @@ require (
 	modernc.org/memory v1.11.0 // indirect
 )
 
-replace github.com/juliengk/go-utils => github.com/jonasbroms/go-utils v0.0.0-20220910194142-e74a4beb9866
-
-replace github.com/juliengk/go-mount => github.com/kassisol/go-mount v0.0.0-20170406141235-e7123cbaaaf6

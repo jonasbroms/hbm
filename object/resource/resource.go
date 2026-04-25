@@ -1,7 +1,9 @@
 package resource
 
 import (
+	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	resourcepkg "github.com/jonasbroms/hbm/docker/resource"
@@ -9,9 +11,6 @@ import (
 	"github.com/jonasbroms/hbm/object/types"
 	"github.com/jonasbroms/hbm/storage"
 	"github.com/jonasbroms/hbm/storage/driver"
-	"github.com/juliengk/go-utils"
-	"github.com/juliengk/go-utils/json"
-	"github.com/juliengk/go-utils/validation"
 )
 
 type Resource interface {
@@ -45,14 +44,19 @@ func (c *Config) End() {
 }
 
 func (c *Config) Add(name, rType, rValue string, rOptions []string) error {
-	options := utils.ConvertSliceToMap("=", rOptions)
+	options := make(map[string]string)
+	for _, s := range rOptions {
+		if k, v, ok := strings.Cut(s, "="); ok {
+			options[k] = v
+		}
+	}
 
 	if rType == "all" && rValue == "all" {
 		return fmt.Errorf("add user to 'administrators' group instead of adding a resource with type and value to 'all'")
 	}
 
-	if err := validation.IsValidName(name); err != nil {
-		return err
+	if !regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`).MatchString(name) {
+		return fmt.Errorf("name is not valid")
 	}
 
 	if c.Storage.FindResource(name) {
@@ -94,16 +98,16 @@ func (c *Config) Add(name, rType, rValue string, rOptions []string) error {
 		if _, ok := options["nosuid"]; ok {
 			vo.NoSuid = true
 		}
-		jsonR := json.Encode(vo)
-		opts = jsonR.String()
+		b, _ := json.Marshal(vo)
+		opts = string(b)
 	}
 
 	if rType == "image" {
 		io := types.ImageOptions{}
 		if _, ok := options["subimages"]; ok {
 			io.SubImages = true
-			jsonR := json.Encode(io)
-			opts = jsonR.String()
+			b, _ := json.Marshal(io)
+			opts = string(b)
 			if rValue[len(rValue)-1] != '/' {
 				rValue = fmt.Sprintf("%s/", rValue)
 			}

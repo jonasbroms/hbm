@@ -8,11 +8,11 @@ import (
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 )
 
 func Action(config *types.Config, action, cmd string) *types.AllowResult {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {

@@ -5,8 +5,9 @@ import (
 	"slices"
 	"strings"
 
+	"os"
+
 	"github.com/jonasbroms/hbm/cli/command/commands"
-	"github.com/juliengk/go-utils/user"
 	"github.com/spf13/cobra"
 )
 
@@ -56,8 +57,7 @@ func NewHBMCommand() *cobra.Command {
 			}
 
 			// Default require root for all commands
-			u := user.New()
-			if !u.IsRoot() {
+			if os.Getuid() != 0 {
 				return fmt.Errorf("this command requires root privileges")
 			}
 			return nil

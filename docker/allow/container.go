@@ -1,11 +1,14 @@
 package allow
 
 import (
+	"bufio"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/authorization"
@@ -14,10 +17,8 @@ import (
 	"github.com/jonasbroms/hbm/docker/allow/types"
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	objtypes "github.com/jonasbroms/hbm/object/types"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-mount"
-	"github.com/juliengk/go-utils"
-	"github.com/juliengk/go-utils/json"
 )
 
 func ContainerCreate(req authorization.Request, config *types.Config) *types.AllowResult {
@@ -28,11 +29,11 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 
 	cc := &ContainerCreateConfig{}
 
-	if err := json.Decode(req.RequestBody, cc); err != nil {
+	if err := json.Unmarshal(req.RequestBody, cc); err != nil {
 		return &types.AllowResult{Allow: false, Error: err.Error()}
 	}
 
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
@@ -414,7 +415,7 @@ func GetPortBindingString(pb *network.PortBinding) string {
 }
 
 func AllowVolume(vol string, config *types.Config) (bool, string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", config.AppPath)
 	if err != nil {
@@ -448,8 +449,8 @@ func AllowVolume(vol string, config *types.Config) (bool, string) {
 		Recursive: false,
 		NoSuid:    nosuid,
 	}
-	jsonVO := json.Encode(vo)
-	opts := strings.TrimSpace(jsonVO.String())
+	jsonVOBytes, _ := json.Marshal(vo)
+	opts := strings.TrimSpace(string(jsonVOBytes))
 
 	if p.Validate(config.Username, "volume", vol, opts) {
 		return true, ""
@@ -470,8 +471,8 @@ func AllowVolume(vol string, config *types.Config) (bool, string) {
 		if AllowMount(vol) {
 			vo.NoSuid = true
 		}
-		jsonVO = json.Encode(vo)
-		opts = strings.TrimSpace(jsonVO.String())
+		jsonVOBytes, _ = json.Marshal(vo)
+		opts = strings.TrimSpace(string(jsonVOBytes))
 
 		if p.Validate(config.Username, "volume", path.Join(val...), opts) {
 			return true, ""
@@ -482,17 +483,27 @@ func AllowVolume(vol string, config *types.Config) (bool, string) {
 }
 
 func AllowMount(vol string) bool {
-	result := false
-
-	entries, err := mount.New()
+	f, err := os.Open("/etc/mtab")
 	if err != nil {
 		return false
 	}
+	defer f.Close()
 
-	entry, err := entries.Find(vol)
-	if err == nil {
-		result = entry.FindOption("nosuid")
+	re := regexp.MustCompile(`^(.+)\s+(.+)\s+(.+)\s+(.*)\s+([0-9]+)\s+([0-9]+)$`)
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		m := re.FindStringSubmatch(scanner.Text())
+		if m == nil {
+			continue
+		}
+		if m[2] == vol {
+			for _, opt := range strings.Split(m[4], ",") {
+				if opt == "nosuid" {
+					return true
+				}
+			}
+			return false
+		}
 	}
-
-	return result
+	return false
 }

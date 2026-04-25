@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 	"text/tabwriter"
 
 	policyobj "github.com/jonasbroms/hbm/object/policy"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,7 @@ func newListCommand() *cobra.Command {
 }
 
 func runList(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	p, err := policyobj.New("sqlite", adf.AppPath)
 	if err != nil {
@@ -40,7 +41,12 @@ func runList(cmd *cobra.Command, args []string) {
 	}
 	defer p.End()
 
-	filters := utils.ConvertSliceToMap("=", policyListFilter)
+	filters := make(map[string]string)
+	for _, s := range policyListFilter {
+		if k, v, ok := strings.Cut(s, "="); ok {
+			filters[k] = v
+		}
+	}
 
 	policies, err := p.List(filters)
 	if err != nil {

@@ -14,7 +14,7 @@ import (
 	userobj "github.com/jonasbroms/hbm/object/user"
 	"github.com/jonasbroms/hbm/pkg/adf"
 	"github.com/jonasbroms/hbm/version"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/moby/moby/client"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,7 @@ func NewInfoCommand() *cobra.Command {
 }
 
 func runInfo(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	cfg, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {

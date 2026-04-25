@@ -2,11 +2,11 @@ package policy
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/jonasbroms/hbm/object/types"
 	"github.com/jonasbroms/hbm/storage"
 	"github.com/jonasbroms/hbm/storage/driver"
-	"github.com/juliengk/go-utils/validation"
 )
 
 type Policy interface {
@@ -42,8 +42,8 @@ func (c *Config) End() {
 func (c *Config) Add(name, group, collection string) error {
 	defer c.Storage.End()
 
-	if err := validation.IsValidName(name); err != nil {
-		return err
+	if !regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`).MatchString(name) {
+		return fmt.Errorf("name is not valid")
 	}
 
 	if len(group) == 0 {

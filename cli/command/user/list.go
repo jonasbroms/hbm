@@ -9,7 +9,7 @@ import (
 
 	userobj "github.com/jonasbroms/hbm/object/user"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +32,7 @@ func newListCommand() *cobra.Command {
 }
 
 func runList(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	u, err := userobj.New("sqlite", adf.AppPath)
 	if err != nil {
@@ -41,7 +41,12 @@ func runList(cmd *cobra.Command, args []string) {
 	}
 	defer u.End()
 
-	filters := utils.ConvertSliceToMap("=", userListFilter)
+	filters := make(map[string]string)
+	for _, s := range userListFilter {
+		if k, v, ok := strings.Cut(s, "="); ok {
+			filters[k] = v
+		}
+	}
 
 	users, err := u.List(filters)
 	if err != nil {

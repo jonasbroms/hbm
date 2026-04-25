@@ -3,16 +3,17 @@ package main
 import (
 	"fmt"
 
+	"os"
+
 	"github.com/jonasbroms/hbm/cli/command"
 	"github.com/jonasbroms/hbm/cli/command/commands"
-	"github.com/juliengk/go-utils/filedir"
 )
 
 func main() {
 	scPath := "/tmp/hbm/shellcompletion"
 	bashTarget := fmt.Sprintf("%s/bash", scPath)
 
-	if err := filedir.CreateDirIfNotExist(scPath, true, 0755); err != nil {
+	if err := os.MkdirAll(scPath, 0755); err != nil {
 		fmt.Println(err)
 	}
 

@@ -6,7 +6,7 @@ import (
 
 	configobj "github.com/jonasbroms/hbm/object/config"
 	"github.com/jonasbroms/hbm/pkg/adf"
-	"github.com/juliengk/go-utils"
+	"github.com/jonasbroms/hbm/pkg/recovery"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func newSetCommand() *cobra.Command {
 }
 
 func runSet(cmd *cobra.Command, args []string) {
-	defer utils.RecoverFunc()
+	defer recovery.Handle()
 
 	c, err := configobj.New("sqlite", adf.AppPath)
 	if err != nil {

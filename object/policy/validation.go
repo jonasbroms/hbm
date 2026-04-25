@@ -2,8 +2,7 @@ package policy
 
 import (
 	"fmt"
-
-	"github.com/juliengk/go-utils"
+	"slices"
 )
 
 func isValidFilterKeys(filters map[string]string) error {
@@ -18,7 +17,7 @@ func isValidFilterKeys(filters map[string]string) error {
 	}
 
 	for k := range filters {
-		if !utils.StringInSlice(k, validKeys, false) {
+		if !slices.Contains(validKeys, k) {
 			return fmt.Errorf("%s is not a valid filter key", k)
 		}
 	}

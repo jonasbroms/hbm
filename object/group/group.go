@@ -2,10 +2,10 @@ package group
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/jonasbroms/hbm/storage"
 	"github.com/jonasbroms/hbm/storage/driver"
-	"github.com/juliengk/go-utils/validation"
 )
 
 type Group interface {
@@ -37,8 +37,8 @@ func (c *Config) End() {
 }
 
 func (c *Config) Add(name string) error {
-	if err := validation.IsValidGroupname(name); err != nil {
-		return err
+	if !regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`).MatchString(name) {
+		return fmt.Errorf("groupname is not valid")
 	}
 
 	if c.Storage.FindGroup(name) {
