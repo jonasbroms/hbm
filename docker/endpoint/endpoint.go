@@ -17,7 +17,7 @@ func GetUris() *uri.URIs {
 	uris.Register("GET", `^/containers/(.+)/export`, allow.ContainerOwner, "container_export", "container export", "Export the contents of a container as a tarball")
 	uris.Register("GET", `^/containers/(.+)/stats`, allow.ContainerOwner, "container_stats", "container stats", "The endpoint returns a live stream of a container's resource usage statistics")
 	uris.Register("POST", `^/containers/(.+)/resize`, allow.ContainerOwner, "container_resize", "resize", "Resize the TTY for a container")
-	uris.Register("POST", `^/containers/(.+)/start`, allow.ContainerOwner, "container_start", "container start", "Start a container")
+	uris.Register("POST", `^/containers/(.+)/start`, allow.ContainerStart, "container_start", "container start", "Start a container")
 	uris.Register("POST", `^/containers/(.+)/stop`, allow.ContainerOwner, "container_stop", "container stop", "Stop a container")
 	uris.Register("POST", `^/containers/(.+)/restart`, allow.ContainerOwner, "container_restart", "container restart", "Restart a container")
 	uris.Register("POST", `^/containers/(.+)/kill`, allow.ContainerOwner, "container_kill", "container kill", "Kill a container")
