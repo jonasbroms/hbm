@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	Version   string
-	GitCommit string = "HEAD"
+	Version   string = "dev"
+	GitCommit string = "unknown"
 	GitState  string = "dirty"
 	BuildDate string = "0"
 )
@@ -34,19 +34,17 @@ type VersionInfo struct {
 }
 
 func New() *VersionInfo {
-	i, err := strconv.ParseInt(BuildDate, 10, 64)
-	if err != nil {
-		panic(err)
+	built := "unknown"
+	if i, err := strconv.ParseInt(BuildDate, 10, 64); err == nil && i > 0 {
+		built = time.Unix(i, 0).String()
 	}
-
-	tu := time.Unix(i, 0)
 
 	return &VersionInfo{
 		Version:   Version,
 		GoVersion: runtime.Version(),
 		GitCommit: GitCommit,
 		GitState:  GitState,
-		BuildDate: tu.String(),
+		BuildDate: built,
 		Os:        runtime.GOOS,
 		Arch:      runtime.GOARCH,
 	}
