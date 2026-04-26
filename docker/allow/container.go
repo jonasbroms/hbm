@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -45,6 +46,10 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 		for _, b := range cc.HostConfig.Binds {
 			vol := strings.Split(b, ":")
 
+			if !strings.HasPrefix(vol[0], "/") {
+				// Named volume, not a bind mount path — no filesystem path to validate
+				continue
+			}
 			vol[0], _ = filepath.Abs(vol[0])
 			if allowed, reason := AllowVolume(vol[0], config); !allowed {
 				return &types.AllowResult{
