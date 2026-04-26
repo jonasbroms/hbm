@@ -294,6 +294,19 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 		}
 	}
 
+	if cc.HostConfig.CgroupnsMode == "host" {
+		if !p.Validate(config.Username, "config", "container_create_param_cgroupns_host", "") {
+			return &types.AllowResult{
+				Allow: false,
+				Msg: map[string]string{
+					"text":           "--cgroupns=\"host\" param is not allowed",
+					"resource_type":  "config",
+					"resource_value": "container_create_param_cgroupns_host",
+				},
+			}
+		}
+	}
+
 	if len(cc.HostConfig.Sysctls) > 0 {
 		if !p.Validate(config.Username, "config", "container_create_param_sysctl", "") {
 			return &types.AllowResult{

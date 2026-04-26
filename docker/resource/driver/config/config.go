@@ -36,6 +36,7 @@ func New() (driver.Resourcer, error) {
 	actions = append(actions, Action{Key: "container_create_param_user_root", Description: "--user=\"root\" param"})
 	actions = append(actions, Action{Key: "container_create_param_userns_host", Description: "--userns=\"host\" param"})
 	actions = append(actions, Action{Key: "container_create_param_uts_host", Description: "--uts=\"host\" param"})
+	actions = append(actions, Action{Key: "container_create_param_cgroupns_host", Description: "--cgroupns=\"host\" param"})
 
 	actions = append(actions, Action{Key: "image_create_official", Description: "Pull of Official image"})
 
