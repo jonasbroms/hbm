@@ -8,6 +8,15 @@ import (
 func GetUris() *uri.URIs {
 	uris := uri.New()
 
+	// BuildKit default builder is a shared container; all users must be able to inspect/start/stop/exec it.
+	// These patterns must be registered before the generic container patterns (first-match wins).
+	// Named builders (buildx_buildkit_<name>) are private and fall through to ContainerOwner checks.
+	// Delete is never exempted — ownership is always checked.
+	uris.Register("GET", `^/containers/buildx_buildkit_default/json`, allow.True, "buildkit", "buildkit", "Inspect BuildKit default builder")
+	uris.Register("POST", `^/containers/buildx_buildkit_default/start`, allow.True, "buildkit", "buildkit", "Start BuildKit default builder")
+	uris.Register("POST", `^/containers/buildx_buildkit_default/stop`, allow.True, "buildkit", "buildkit", "Stop BuildKit default builder")
+	uris.Register("POST", `^/containers/buildx_buildkit_default/exec`, allow.True, "buildkit", "buildkit", "Exec into BuildKit default builder")
+
 	uris.Register("GET", `^/containers/json`, allow.True, "container_list", "container ls", "List containers")
 	uris.Register("POST", `^/containers/create`, allow.ContainerCreate, "container_create", "container create", "Create a container")
 	uris.Register("GET", `^/containers/(.+)/json`, allow.ContainerOwner, "container_inspect", "container inspect", "Return low-level information about a container")
@@ -34,8 +43,6 @@ func GetUris() *uri.URIs {
 	uris.Register("PUT", `^/containers/(.+)/archive`, allow.ContainerOwner, "container_archive_extract", "archive", "Upload a tar archive to be extracted to a path in the filesystem of container id")
 	uris.Register("POST", `^/containers/prune`, allow.True, "container_prune", "container prune", "Delete stopped containers")
 
-	// Buildkit
-	uris.Register("POST", `^/containers/buildx_buildkit_default/exec`, allow.True, "buildkit", "buildkit", "Access Buildkit default builder")
 	uris.Register("POST", `^/grpc`, allow.True, "grpc", "grpc", "Initialize grpc session")
 	uris.Register("POST", `^/session`, allow.True, "session", "session", "Initialize interactive session")
 
