@@ -57,10 +57,6 @@ github.com/jinzhu/inflection v1.0.1-0.20231016084002-bbe0a3e7399f h1:CaL7/sMHOaA
 github.com/jinzhu/inflection v1.0.1-0.20231016084002-bbe0a3e7399f/go.mod h1:lcrn0jrToZnZxiaoiYlmxfr1DnDQn86NkcbmyrP7m5w=
 github.com/jinzhu/now v1.0.1 h1:HjfetcXq097iXP0uoPCdnM4Efp5/9MsM0/M+XOTeR3M=
 github.com/jinzhu/now v1.0.1/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
-github.com/jonasbroms/go-utils v0.0.0-20220910194142-e74a4beb9866 h1:he6BRefPZpPqRrQMZDwftZQtX1ZyYiiyDPInPeupIVU=
-github.com/jonasbroms/go-utils v0.0.0-20220910194142-e74a4beb9866/go.mod h1:Yh+27uajvQ76cf0WCzgP/olL1DAIM/hJHzt+oKhM0eg=
-github.com/kassisol/go-mount v0.0.0-20170406141235-e7123cbaaaf6 h1:/rqa2YA8CKBS8Nffm84u9uUvXiyHBnYqYMENn0idEk8=
-github.com/kassisol/go-mount v0.0.0-20170406141235-e7123cbaaaf6/go.mod h1:KeYEbKF5IX2D3wUMgbAbdQrqekOWXe05kH1hr79jDHM=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
@@ -134,8 +130,6 @@ golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.43.0 h1:Rlag2XtaFTxp19wS8MXlJwTvoh8ArU6ezoyFsMyCTNI=
 golang.org/x/sys v0.43.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
-golang.org/x/text v0.36.0 h1:JfKh3XmcRPqZPKevfXVpI1wXPTqbkE5f7JA92a55Yxg=
-golang.org/x/text v0.36.0/go.mod h1:NIdBknypM8iqVmPiuco0Dh6P5Jcdk8lJL0CUebqK164=
 golang.org/x/tools v0.43.0 h1:12BdW9CeB3Z+J/I/wj34VMl8X+fEXBxVR90JeMX5E7s=
 golang.org/x/tools v0.43.0/go.mod h1:uHkMso649BX2cZK6+RpuIPXS3ho2hZo4FVwfoy1vIk0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
