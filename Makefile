@@ -1,6 +1,6 @@
 # HBM
 
-.PHONY: all build clean test vendor format lint shellcheck dockerlint doclint help
+.PHONY: all build clean test vendor format lint shellcheck dockerlint doclint tag help
 
 DOCKER := $(shell command -v docker 2>/dev/null || command -v podman 2>/dev/null)
 
@@ -71,6 +71,19 @@ doclint:
 	@echo "Linting Markdown docs..."
 	$(DOCKER) run --rm -v "$$PWD:/workdir:ro" davidanson/markdownlint-cli2 "docs/**/*.md" "*.md"
 
+# Create an annotated git tag: make tag VERSION=0.22.0
+tag:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Usage: make tag VERSION=<version>  (e.g. 0.22.0)"; \
+		echo "Last tag: $$(git describe --tags --abbrev=0 2>/dev/null || echo none)"; \
+		exit 1; \
+	fi
+	@if git tag -l | grep -qx "$(VERSION)"; then \
+		echo "Tag $(VERSION) already exists"; exit 1; \
+	fi
+	git tag -a "$(VERSION)" -m "$$(git log --pretty=format:'  * %s' $$(git describe --tags --abbrev=0)..HEAD)"
+	@echo "Created tag $(VERSION) — push with: git push origin $(VERSION)"
+
 # Show help
 help:
 	@echo "HBM"
@@ -85,6 +98,7 @@ help:
 	@echo "  make shellcheck  - Lint shell scripts"
 	@echo "  make dockerlint  - Lint Dockerfiles"
 	@echo "  make doclint     - Lint Markdown documentation"
+	@echo "  make tag         - Create annotated git tag (VERSION=x.y.z required)"
 	@echo "  make help        - Show this help"
 
 .DEFAULT_GOAL := build
