@@ -13,7 +13,7 @@ if [[ "${DEB_VERSION}" != [0-9]* ]]; then
 	DEB_VERSION="0~git.${DEB_VERSION}"
 fi
 
-PKGNAME="hbm_${DEB_VERSION}-${RELEASE}_amd64"
+PKGNAME="hbm_${DEB_VERSION}-${RELEASE}ubuntu20.04_amd64"
 PKGDIR="/tmp/pkg/${PKGNAME}"
 
 mkdir -p "${PKGDIR}/DEBIAN"
@@ -34,7 +34,7 @@ done
 
 cat > "${PKGDIR}/DEBIAN/control" <<EOF
 Package: hbm
-Version: ${DEB_VERSION}-${RELEASE}
+Version: ${DEB_VERSION}-${RELEASE}ubuntu20.04
 Architecture: amd64
 Maintainer: Jonas Bröms <https://github.com/jonasbroms>
 Description: Docker Engine Access Authorization Plugin

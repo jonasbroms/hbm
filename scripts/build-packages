@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-ORIGIN=$(pwd)
-BASE="scripts/packages"
+ORIGIN=$(cd "$(dirname "$0")/.." && pwd)
+BASE="${ORIGIN}/scripts/packages"
+FILTER="${1:-}"  # Optional: only build this platform (e.g. rockylinux8)
 
 source "$(dirname "$0")/version"
 
@@ -15,9 +16,14 @@ fi
 
 for i in "${BASE}"/*/; do
 	PLATFORM=$(basename "${i}")
+
+	if [ -n "${FILTER}" ] && [ "${PLATFORM}" != "${FILTER}" ]; then
+		continue
+	fi
+
 	echo "build-packages: Building ${PLATFORM}"
 
-	cd "${ORIGIN}/${i}"
+	cd "${i}"
 
 	if [ ! -f "Dockerfile" ]; then
 		echo "build-packages: WARN: Skipping ${PLATFORM} (no Dockerfile)"
