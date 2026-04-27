@@ -1,23 +1,16 @@
 [Unit]
-Description=HBM Docker Authorization Plugin
-Documentation=https://github.com/jonasbroms/hbm
+Description=Harbormaster Plugin
 Before=docker.service
 After=network.target hbm.socket
-Requires=hbm.socket
-Wants=docker.service
+Requires=hbm.socket docker.service
 
 [Service]
 Type=simple
-ExecStartPre=-/usr/local/sbin/hbm init
-ExecStart=/usr/local/sbin/hbm server
-Restart=on-failure
+TimeoutStartSec=0
+Restart=always
 RestartSec=10s
-
-# Security
-NoNewPrivileges=yes
-PrivateTmp=yes
-ProtectHome=yes
-ReadWritePaths=/var/lib/hbm /run/docker/plugins /etc/docker/plugins
+ExecStartPre=-/usr/sbin/hbm init
+ExecStart=/usr/sbin/hbm server
 
 [Install]
 WantedBy=multi-user.target

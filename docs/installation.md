@@ -36,7 +36,6 @@ Description=HBM Docker Authorization Plugin Socket
 ListenStream=/run/docker/plugins/hbm.sock
 SocketMode=0660
 
-
 [Install]
 WantedBy=sockets.target
 ```
@@ -46,24 +45,13 @@ Create the service unit at `/etc/systemd/system/hbm.service`:
 ```ini
 [Unit]
 Description=HBM Docker Authorization Plugin
-Documentation=https://github.com/jonasbroms/hbm
-Before=docker.service
-After=network.target hbm.socket
-Requires=hbm.socket
-Wants=docker.service
+After=network.target
 
 [Service]
-Type=simple
-ExecStartPre=-/usr/local/sbin/hbm init
+ExecStartPre=/usr/local/sbin/hbm init
 ExecStart=/usr/local/sbin/hbm server
-Restart=on-failure
+Restart=always
 RestartSec=10s
-
-# Security
-NoNewPrivileges=yes
-PrivateTmp=yes
-ProtectHome=yes
-ReadWritePaths=/var/lib/hbm /run/docker/plugins /etc/docker/plugins
 
 [Install]
 WantedBy=multi-user.target

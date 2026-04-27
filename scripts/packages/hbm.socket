@@ -1,9 +1,8 @@
 [Unit]
-Description=HBM Docker Authorization Plugin Socket
+Description=Harbormaster Plugin Socket
 
 [Socket]
 ListenStream=/run/docker/plugins/hbm.sock
-SocketMode=0660
 
 [Install]
 WantedBy=sockets.target
