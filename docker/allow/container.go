@@ -144,6 +144,7 @@ func ContainerCreate(req authorization.Request, config *types.Config) *types.All
 
 	if len(cc.HostConfig.CapAdd) > 0 {
 		for _, c := range cc.HostConfig.CapAdd {
+			c = normalizeCapability(c)
 			if !p.Validate(config.Username, "capability", c, "") {
 				return &types.AllowResult{
 					Allow: false,
@@ -479,6 +480,12 @@ func AllowVolume(vol string, config *types.Config) bool {
 	}
 
 	return false
+}
+
+func normalizeCapability(cap string) string {
+	cap = strings.ToUpper(cap)
+	cap = strings.TrimPrefix(cap, "CAP_")
+	return cap
 }
 
 func AllowMount(vol string) bool {
