@@ -90,6 +90,11 @@ hbm resource add allow-sys-time  -t capability -v SYS_TIME
 
 Valid values include: `AUDIT_CONTROL`, `AUDIT_WRITE`, `CHOWN`, `DAC_OVERRIDE`, `DAC_READ_SEARCH`, `FOWNER`, `FSETID`, `IPC_LOCK`, `KILL`, `MKNOD`, `NET_ADMIN`, `NET_BIND_SERVICE`, `NET_RAW`, `SETGID`, `SETUID`, `SYS_ADMIN`, `SYS_CHROOT`, `SYS_MODULE`, `SYS_PTRACE`, `SYS_TIME`, and others.
 
+Capability names are normalized before matching: they are upper-cased and any
+leading `CAP_` prefix is stripped. A policy value of `NET_ADMIN` therefore
+matches a `--cap-add` request for `net_admin`, `NET_ADMIN`, or `CAP_NET_ADMIN`
+alike, and you may store the resource in any of those forms.
+
 ### dns
 
 Allows specifying a custom DNS server with `--dns`.
