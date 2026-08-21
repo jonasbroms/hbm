@@ -11,7 +11,8 @@ ENV RPMBUILD_PATH="/srv/rpmbuild"
 
 RUN build="rpm-build systemd-rpm-macros" \
 	&& set -x \
-	&& yum -y install $build \
+	&& yum -y clean all \
+	&& yum -y --refresh install $build \
 	&& yum -y autoremove \
 	&& yum clean all
 

@@ -11,7 +11,11 @@ ENV RPMBUILD_PATH="/srv/rpmbuild"
 
 RUN build="rpm-build systemd-rpm-macros" \
 	&& set -x \
-	&& yum -y install $build \
+	&& sed -i -e 's|^mirrorlist=|#mirrorlist=|g' \
+		-e 's|^#baseurl=http://dl.rockylinux.org|baseurl=https://dl.rockylinux.org|g' \
+		/etc/yum.repos.d/Rocky-*.repo \
+	&& yum -y clean all \
+	&& yum -y --refresh install $build \
 	&& yum -y autoremove \
 	&& yum clean all
 
