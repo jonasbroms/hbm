@@ -4,7 +4,7 @@
 
 - Linux (RHEL/Fedora or compatible)
 - Docker CE installed and running
-- Go 1.25+ (for building from source)
+- Go 1.26+ (for building from source)
 - Docker configured for TLS (required for multi-user setups — see [Security](security.md))
 
 ## Build from Source
