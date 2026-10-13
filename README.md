@@ -33,12 +33,12 @@ See the [docs/](docs/) directory:
 
 ## Supported versions
 
-| HBM version         | Go    | Docker API types                  | Tested Docker Engine |
-|---------------------|-------|-----------------------------------|----------------------|
-| master (unreleased) | 1.26+ | moby/moby/api v1.56               | 28.1, 28.5, 29.7     |
-| 0.21.x – 0.22.x     | 1.26+ | moby/moby/api v1.54               | —                    |
-| 0.20.x              | 1.25+ | docker/docker v28.5 (API 1.51)    | —                    |
-| 0.19.x              | 1.21+ | docker/docker v24.0 (API 1.43)    | —                    |
+| HBM version         | Go    | Docker API types               | Tested Docker Engine   |
+|---------------------|-------|--------------------------------|------------------------|
+| master (unreleased) | 1.26+ | moby/moby/api v1.56            | 28.1, 28.5, 29.7, 29.9 |
+| 0.21.x – 0.22.x     | 1.26+ | moby/moby/api v1.54            | —                      |
+| 0.20.x              | 1.25+ | docker/docker v28.5 (API 1.51) | —                      |
+| 0.19.x              | 1.21+ | docker/docker v24.0 (API 1.43) | —                      |
 
 The Go toolchain preferred by `go.mod` is 1.27.2. It is fetched automatically where `GOTOOLCHAIN=auto`. Go 1.26 also builds HBM.
 
