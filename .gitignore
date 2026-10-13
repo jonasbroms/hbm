@@ -6,3 +6,5 @@ hbm
 # Integration test cache and run artifacts
 .tests/.cache/
 .tests/runs/
+# Claude Code local state
+.claude/
