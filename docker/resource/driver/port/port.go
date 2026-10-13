@@ -34,7 +34,7 @@ func (c *Config) Valid(value string) error {
 
 	if startPort != endPort {
 		if startPort > endPort {
-			return fmt.Errorf("Range of ports is not valid. Start port is greater than end port.")
+			return fmt.Errorf("range of ports is not valid: start port is greater than end port")
 		}
 
 		ports = append(ports, endPort)

@@ -43,7 +43,7 @@ func (c *Config) Valid(value string) error {
 		}
 	}
 
-	return fmt.Errorf("Log driver '%s' is not valid", value)
+	return fmt.Errorf("log driver '%s' is not valid", value)
 }
 
 func (c *Config) ValidOptions(options map[string]string) error {

@@ -17,7 +17,7 @@ func NewDriver(driver string) (driver.Resourcer, error) {
 		return init()
 	}
 
-	return nil, fmt.Errorf("The Resource Driver: %s is not supported. Supported drivers are %s", driver, SupportedDrivers(","))
+	return nil, fmt.Errorf("resource driver %s is not supported. Supported drivers are %s", driver, SupportedDrivers(","))
 }
 
 func RegisterDriver(driver string, init Initialize) {

@@ -29,5 +29,5 @@ func (c Configs) IsValid(name string) error {
 		}
 	}
 
-	return fmt.Errorf("This feature is not valid")
+	return fmt.Errorf("this feature is not valid")
 }

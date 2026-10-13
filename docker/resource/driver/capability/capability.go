@@ -71,7 +71,7 @@ func (c *Config) Valid(value string) error {
 		}
 	}
 
-	return fmt.Errorf("Capability '%s' is not valid", value)
+	return fmt.Errorf("capability '%s' is not valid", value)
 }
 
 func (c *Config) ValidOptions(options map[string]string) error {
