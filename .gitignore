@@ -8,3 +8,6 @@ hbm
 .tests/runs/
 # Claude Code local state
 .claude/
+
+# Package build staging
+scripts/packages/*/build/
