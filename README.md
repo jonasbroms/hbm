@@ -35,7 +35,7 @@ See the [docs/](docs/) directory:
 
 | HBM version         | Go    | Docker API types               | Tested Docker Engine   |
 |---------------------|-------|--------------------------------|------------------------|
-| master (unreleased) | 1.26+ | moby/moby/api v1.56            | 28.1, 28.5, 29.7, 29.9 |
+| 0.23.x              | 1.26+ | moby/moby/api v1.56            | 28.1, 28.5, 29.7, 29.9 |
 | 0.21.x – 0.22.x     | 1.26+ | moby/moby/api v1.54            | —                      |
 | 0.20.x              | 1.25+ | docker/docker v28.5 (API 1.51) | —                      |
 | 0.19.x              | 1.21+ | docker/docker v24.0 (API 1.43) | —                      |
