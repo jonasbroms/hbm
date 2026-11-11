@@ -28,6 +28,9 @@ func inspectContainer(containerID string) (*containerInspectResult, error) {
 	httpc := http.Client{
 		Timeout: 5 * time.Second,
 		Transport: &http.Transport{
+			// Each call builds its own Transport, so a kept-alive connection
+			// would sit idle forever and leak a socket per request.
+			DisableKeepAlives: true,
 			DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
 				return net.Dial("unix", "/var/run/docker.sock")
 			},
